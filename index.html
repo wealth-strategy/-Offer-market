@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<!--
+  =====================================================
+  Member's Offer Market - メインページ
+  =====================================================
+  【このファイルの構成】
+  1. <head>    : ページの設定・デザイン（CSS）
+  2. <body>    : 実際に画面に表示される内容（HTML）
+  3. <script>  : ボタンクリック時の動き（JavaScript）
+
+  【編集するときのポイント】
+  - 商品名・価格 → <body> の中の product-name / product-price-regular を探す
+  - 色を変えたい → <head> の :root {} の中の変数を変える
+  - LINE ID変更 → @110gnfzj を自分のIDに全て置換（Ctrl+H）
+  =====================================================
+-->
+<html lang="ja">
+<head>
+  <!-- ブラウザに「文字コードはUTF-8（日本語対応）」と伝える設定 -->
+  <meta charset="UTF-8">
+  <!-- スマホでも正しいサイズで表示するための設定 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- ブラウザのタブに表示されるページタイトル ★変更OK★ -->
+  <title>Member's Offer Market</title>
+  <!-- Googleフォントの読み込み（日本語：Noto Sans JP、英語：Montserrat） -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* =======================================================
+       【リセット・ベース設定】
+       すべての要素の余白をゼロにリセットし、
+       ブラウザごとのデザインのズレをなくす基本設定
+    ======================================================= */
+    *, *::before, *::after {
+      box-sizing: border-box; /* 枠線込みでサイズ計算する設定 */
+      margin: 0;              /* 外側余白をゼロに */
+      padding: 0;             /* 内側余白をゼロに */
+    }
+    html {
+      scroll-behavior: smooth; /* リンクをクリックしたときにスムーズにスクロール */
+    }
+    body {
+      font-family: 'Noto Sans JP', sans-serif; /* サイト全体のフォント（日本語） */
+      background: #FFFFFF;                     /* 背景色：白 */
+      color: #2C2C2C;                          /* 文字色：ほぼ黒 */
+      line-height: 1.6;                        /* 行間（読みやすい間隔） */
+    }
+    a {
+      text-decoration: none; /* リンクの下線を消す */
+      color: inherit;        /* リンクの色を親要素と同じにする */
+    }
+    img {
+      max-width: 100%; /* 画像がはみ出さないよう最大幅を制限 */
+      display: block;  /* 画像の下に余計な隙間が出ないようにする */
+    }
+
+
+    /* =======================================================
+       【カラー変数】
+       サイト全体で使う色をここで一括管理している
+       ★色を変えたいときはここだけ変えればOK★
+
+       --gold        : シャンパンゴールド（メインカラー）
+       --black       : 黒（ヘッダー・フッター）
+       --dark        : 濃いグレー（本文テキスト）
+       --gray        : グレー（サブテキスト・価格など）
+       --light-gray  : 薄いグレー（商品背景）
+       --border      : ボタン枠線のデフォルト色（薄いグレー）
+       --border-active: ボタン枠線のホバー・選択時の色（ゴールド）
+       --white       : 白（背景・ボタン内部）
+       --line-green  : LINEボタンの緑色
+    ======================================================= */
+    :root {
+      --gold: #D4AF37;
+      --black: #1A1A1A;
+      --dark: #2C2C2C;
+      --gray: #888888;
+      --light-gray: #F8F8F8;
+      --border: #E0E0E0;
+      --border-active: #D4AF37;
+      --white: #FFFFFF;
+      --line-green: #06C755;
+    }
+
+
+    /* =======================================================
+       【ヘッダー全体】
+       画面上部のゴールドバー部分
+       position: sticky で画面をスクロールしても常に上に固定される
+
+       ★変更できる項目★
+       - height     : ヘッダーの高さ（px単位）
+       - background : 背景色
+       - padding    : 左右の余白（数値を大きくすると余白が増える）
+    ======================================================= */
+    header {
+      position: sticky;      /* スクロールしても上に固定 */
+      top: 0;                /* 画面の一番上に固定 */
+      z-index: 1000;         /* 他の要素より手前に表示（重なり順） */
+      background: var(--gold); /* 背景色：シャンパンゴールド ★変更OK★ */
+      height: 52px;          /* ヘッダーの高さ ★変更OK★ */
+      display: flex;
+      align-items: center;   /* 縦方向：中央揃え */
+      justify-content: space-between; /* 左右に振り分け */
+      padding: 0 40px;       /* 左右の余白 ★変更OK★ */
+      box-shadow: 0 1px 6px rgba(0,0,0,0.12); /* 下に薄い影 */
+    }
+
+    /* -------------------------------------------------
+       【ヘッダー内：サイト名「Member's Offer Market」】
+       左側に表示される大きなテキスト部分
+
+       ★変更できる項目★
+       - font-size    : 文字の大きさ（例：17px → 20pxで大きくなる）
+       - font-weight  : 文字の太さ（300=細い / 500=普通 / 700=太い）
+       - letter-spacing: 文字間隔
+    ------------------------------------------------- */
+    .header-logo {
+      font-family: 'Montserrat', sans-serif; /* 英字フォント */
+      font-weight: 500;      /* 文字の太さ：普通 ★変更OK★ */
+      font-size: 17px;       /* 文字サイズ ★変更OK★ */
+      color: var(--white);   /* 文字色：白 */
+      letter-spacing: 1.5px; /* 文字間隔 ★変更OK★ */
+    }
+
+    /* -------------------------------------------------
+       【ヘッダー内：サブタイトル「Supported by Wealth Strategy」】
+       サイト名の直下に極小で表示されるテキスト
+
+       ★変更できる項目★
+       - font-size  : 文字サイズ（8px=極小 / 10px=小 / 12px=普通）
+       - color      : 文字色（現在は薄いグレー固定）
+       - font-weight: 太さ（300=細い）
+       - letter-spacing: 文字間隔
+    ------------------------------------------------- */
+    .header-logo span {
+      font-size: 8px;                        /* 極小サイズ ★変更OK★ */
+      display: block;                        /* 改行して下に表示 */
+      letter-spacing: 1.5px;                 /* 文字間隔 ★変更OK★ */
+      font-weight: 300;                      /* 細いフォント ★変更OK★ */
+      color: rgba(220, 220, 220, 0.85);      /* 薄いグレー ★変更OK★ */
+      opacity: 1;
+      margin-top: 2px;                       /* サイト名との上下間隔 */
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    /* -------------------------------------------------
+       【ヘッダー内：右側ナビゲーションメニュー】
+       「カテゴリー」「新着」「LINEで問い合わせ」ボタンが並ぶ部分
+    ------------------------------------------------- */
+    .header-nav {
+      display: flex;   /* 横並びにする */
+      gap: 24px;       /* ボタン間の隙間 ★変更OK★ */
+      align-items: center;
+    }
+    .header-nav a {
+      color: var(--white);  /* リンク文字色：白 */
+      font-size: 12px;      /* 文字サイズ ★変更OK★ */
+      letter-spacing: 0.5px;
+      opacity: 0.85;        /* 少し透明にして上品に */
+      transition: opacity 0.2s; /* ホバー時にふわっと変化 */
+      font-weight: 300;
+    }
+    .header-nav a:hover { opacity: 1; } /* マウスが乗ったら不透明に */
+
+    /* -------------------------------------------------
+       【ヘッダー内：LINEお問い合わせボタン（緑色の丸ボタン）】
+
+       ★変更できる項目★
+       - background : ボタン色（現在はLINEグリーン）
+       - padding    : ボタンの内側余白（大きくするとボタンが大きくなる）
+       - border-radius: 角の丸み（20px=丸 / 0px=四角）
+    ------------------------------------------------- */
+    .header-line-btn {
+      background: var(--line-green); /* ボタン背景色：LINEグリーン ★変更OK★ */
+      color: var(--white) !important;
+      padding: 6px 16px;             /* ボタンの余白（上下 左右） ★変更OK★ */
+      border-radius: 20px;           /* 角の丸み ★変更OK★ */
+      font-weight: 500 !important;
+      opacity: 1 !important;
+      font-size: 12px !important;
+    }
+
+
+    /* =======================================================
+       【メインコンテナ】
+       ページ全体のコンテンツ幅を制限して中央揃えにする箱
+       max-width を変えるとコンテンツの最大幅が変わる
+
+       ★変更できる項目★
+       - max-width : コンテンツ全体の最大幅（px）
+       - padding   : 左右の余白（画面端からの距離）
+    ======================================================= */
+    .container {
+      max-width: 1400px;  /* コンテンツの最大幅 ★変更OK★ */
+      margin: 0 auto;     /* 左右自動余白で中央揃え */
+      padding: 0 48px;    /* 左右の余白 ★変更OK★ */
+    }
+
+
+    /* =======================================================
+       【セクションタイトル】
+       「CATEGORIES」「カテゴリーから探す」が表示される見出し部分
+
+       ★変更できる項目★
+       - padding : 上下余白（カテゴリーグリッドとの距離）
+    ======================================================= */
+    .section-title {
+      text-align: center;      /* 中央揃え */
+      padding: 48px 0 24px;   /* 上48px・下24pxの余白 ★変更OK★ */
+    }
+    /* 「CATEGORIES」の小さい英字見出し */
+    .section-title h2 {
+      font-size: 10px;          /* 文字サイズ（極小） ★変更OK★ */
+      letter-spacing: 5px;      /* 文字間隔（広め） ★変更OK★ */
+      color: var(--gold);       /* 文字色：ゴールド */
+      font-family: 'Montserrat', sans-serif;
+      margin-bottom: 6px;
+      font-weight: 400;
+    }
+    /* 「カテゴリーから探す」の日本語見出し */
+    .section-title h3 {
+      font-size: clamp(15px, 1.8vw, 20px); /* 画面幅に合わせて自動調整 */
+      font-weight: 400;         /* 文字の太さ ★変更OK★ */
+      color: var(--dark);       /* 文字色：ほぼ黒 */
+      letter-spacing: 1px;
+    }
+
+
+    /* =======================================================
+       【カテゴリーエリア全体の背景・余白】
+       12個のカテゴリーボタンが並ぶセクション全体の設定
+
+       ★変更できる項目★
+       - padding-bottom : グリッドの下余白
+    ======================================================= */
+    .category-section {
+      background: var(--white); /* 背景色：白 */
+      padding-bottom: 56px;     /* 下余白 ★変更OK★ */
+    }
+
+    /* -------------------------------------------------
+       【カテゴリーグリッド（PC：6列×2行）】
+       12個のボタンを並べるグリッドレイアウト
+
+       ★列数を変えたいとき★
+       repeat(6, 1fr) の数字を変える
+       例: repeat(4, 1fr) → 4列になる
+       例: repeat(3, 1fr) → 3列になる
+
+       ★変更できる項目★
+       - grid-template-columns : 列数
+       - gap : ボタン間の隙間（大きくするとスカスカ、小さくすると密）
+    ------------------------------------------------- */
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr); /* PC：6列 ★変更OK★ */
+      gap: 12px;  /* ボタン間の隙間 ★変更OK★ */
+    }
+
+    /* -------------------------------------------------
+       【カテゴリーボタン（通常状態）】
+       各カテゴリーの四角いボタン
+
+       ★変更できる項目★
+       - border     : 枠線（1px=細い / 2px=やや太い）
+       - border-radius : 角の丸み（0=直角 / 8px=少し丸 / 50%=円）
+       - padding    : ボタン内側の余白（大きくするとボタンが大きくなる）
+    ------------------------------------------------- */
+    .category-card {
+      border: 1px solid var(--border); /* 枠線：薄いグレー（通常時） */
+      border-radius: 0;                /* 角：直角 ★変更OK★ */
+      padding: 20px 8px;               /* 内側余白（上下 左右） ★変更OK★ */
+      text-align: center;
+      cursor: pointer;                 /* マウスをのせると矢印→手に変わる */
+      transition: border-color 0.2s, box-shadow 0.2s; /* 変化をなめらかに */
+      background: var(--white);        /* ボタン背景色：白 */
+      display: block;
+    }
+    /* マウスをのせたとき（ホバー状態） */
+    .category-card:hover {
+      border-color: var(--border-active); /* 枠線がゴールドに変化 */
+      box-shadow: 0 2px 10px rgba(212,175,55,0.12); /* 薄い影 */
+    }
+    /* クリックして選択中のとき（アクティブ状態） */
+    .category-card.active {
+      border-color: var(--border-active); /* 枠線：ゴールド */
+      background: #FDFBF2;                /* 背景：ごく薄いゴールド */
+    }
+
+    /* -------------------------------------------------
+       【カテゴリーボタン内：絵文字アイコン】
+
+       ★変更できる項目★
+       - font-size    : 絵文字サイズ（大きくしたければ増やす）
+       - margin-bottom: 絵文字とテキストの間隔
+    ------------------------------------------------- */
+    .category-emoji {
+      font-size: 20px;      /* 絵文字サイズ ★変更OK★ */
+      margin-bottom: 7px;   /* 絵文字とテキストの間隔 ★変更OK★ */
+      display: block;
+    }
+
+    /* -------------------------------------------------
+       【カテゴリーボタン内：テキスト（カテゴリー名）】
+
+       ★変更できる項目★
+       - font-size  : 文字サイズ（10px=極小 / 12px=小 / 14px=普通）
+       - font-weight: 太さ（300=細い / 400=普通 / 700=太い）
+       - color      : 文字色
+    ------------------------------------------------- */
+    .category-name {
+      font-size: 10px;      /* 文字サイズ（極小） ★変更OK★ */
+      font-weight: 300;     /* 細いフォント ★変更OK★ */
+      color: var(--dark);   /* 文字色：ほぼ黒 */
+      letter-spacing: 0.2px;
+      line-height: 1.4;     /* 行間 */
+    }
+
+
+    /* =======================================================
+       【商品セクション全体】
+       カテゴリーボタンをクリックすると表示される商品一覧エリア
+       display: none で最初は非表示になっている
+       クリックされたカテゴリーだけ display: block で表示される
+    ======================================================= */
+    .product-section {
+      background: var(--light-gray); /* 背景色：薄いグレー */
+      padding: 48px 0;               /* 上下余白 ★変更OK★ */
+      display: none;                 /* ← 最初は非表示（触らない） */
+    }
+    /* JavaScript でクリックされると .active が付いて表示される */
+    .product-section.active { display: block; }
+
+    /* -------------------------------------------------
+       【商品セクションのタイトル行】
+       「💪🏻 スポーツ・フィットネス」と件数バッジが横並びになる部分
+    ------------------------------------------------- */
+    .product-section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;           /* タイトルとバッジの間隔 */
+      margin-bottom: 28px; /* タイトルと商品グリッドの間隔 ★変更OK★ */
+    }
+    /* セクションタイトルの文字設定 */
+    .product-section-header h2 {
+      font-size: clamp(15px, 1.8vw, 20px); /* 画面幅で自動調整 */
+      font-weight: 400;
+      color: var(--dark);
+    }
+
+    /* -------------------------------------------------
+       【商品件数バッジ】
+       「4件」「商品準備中」などを丸ボタン風に表示するバッジ
+    ------------------------------------------------- */
+    .product-count {
+      font-size: 11px;
+      color: var(--gray);
+      background: var(--white);
+      border: 1px solid var(--border);
+      padding: 3px 11px;
+      border-radius: 20px; /* 丸みを帯びたバッジ形 */
+    }
+
+    /* -------------------------------------------------
+       【商品グリッド】
+       商品カードを横に並べるグリッド
+       minmax(230px, 1fr) により画面幅に応じて自動で列数が変わる
+       例：PC幅では4〜5列、スマホでは2列
+
+       ★変更できる項目★
+       - minmax(230px, ...) : カード1枚の最小幅（小さくすると列が増える）
+       - gap                : カード間の隙間
+    ------------------------------------------------- */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); /* 自動列数 ★変更OK★ */
+      gap: 18px; /* カード間の隙間 ★変更OK★ */
+    }
+
+
+    /* =======================================================
+       【商品カード全体】
+       1つの商品を囲む白い箱（枠線・直角・ホバー時に浮き上がる）
+
+       ★変更できる項目★
+       - border       : 枠線の太さと色
+       - border-radius: 角の丸み（0=直角 / 8px=少し丸）
+    ======================================================= */
+    .product-card {
+      background: var(--white);        /* カード背景：白 */
+      border: 1px solid var(--border); /* 枠線：薄いグレー */
+      border-radius: 0;                /* 角：直角 ★変更OK★ */
+      overflow: hidden;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+      position: relative;
+    }
+    /* マウスをのせたときのカードの変化 */
+    .product-card:hover {
+      border-color: var(--border-active);                  /* 枠線がゴールドに */
+      box-shadow: 0 4px 20px rgba(212,175,55,0.13); /* 薄い影 */
+      transform: translateY(-2px);                  /* 2px上に浮き上がる */
+    }
+
+    /* -------------------------------------------------
+       【商品カード：NEWバッジ】
+       カード左上に表示されるゴールドの「NEW」バッジ
+
+       ★変更できる項目★
+       - background : バッジの色（現在ゴールド）
+       - font-size  : バッジ内の文字サイズ
+       - padding    : バッジの余白（大きくするとバッジが大きくなる）
+    ------------------------------------------------- */
+    .product-badge {
+      position: absolute; /* カード内の絶対位置に固定 */
+      top: 10px;          /* 上からの距離 */
+      left: 10px;         /* 左からの距離 */
+      background: var(--gold); /* バッジ色：ゴールド ★変更OK★ */
+      color: var(--white);
+      font-size: 10px;    /* 文字サイズ ★変更OK★ */
+      font-weight: 600;
+      padding: 3px 8px;   /* バッジの余白 ★変更OK★ */
+      border-radius: 2px;
+      font-family: 'Montserrat', sans-serif;
+      z-index: 1;
+    }
+
+    /* -------------------------------------------------
+       【商品カード：商品画像エリア】
+       ★商品画像を入れるときはここを <img> タグに差し替える★
+
+       プレースホルダーを実際の画像に変える方法：
+       【変更前】<div class="product-img-placeholder">📦 商品画像</div>
+       【変更後】<img class="product-img" src="https://画像のURL">
+
+       ★変更できる項目★
+       - height : 画像エリアの高さ（px）
+    ------------------------------------------------- */
+    .product-img {
+      width: 100%;
+      height: 190px;              /* 画像エリアの高さ ★変更OK★ */
+      object-fit: contain;        /* 画像をはみ出さず収める */
+      background: var(--light-gray);
+      padding: 14px;
+    }
+    /* 画像が未設定のときに表示されるグレーのプレースホルダー */
+    .product-img-placeholder {
+      width: 100%;
+      height: 190px;              /* プレースホルダーの高さ（product-imgと合わせる） */
+      background: linear-gradient(135deg, #F2F2F2, #EAEAEA);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gray);
+      font-size: 12px;
+    }
+
+    /* 商品情報（ブランド名・商品名・価格・ボタン）が入る内側のパディング */
+    .product-body { padding: 14px; }
+
+    /* -------------------------------------------------
+       【商品カード：ブランド名】
+       例：「NORMATEC」「VITAS」など小さいゴールド文字
+
+       ★変更できる項目★
+       - font-size : 文字サイズ
+       - color     : 文字色（現在ゴールド）
+    ------------------------------------------------- */
+    .product-brand {
+      font-size: 10px;      /* 小さい文字 ★変更OK★ */
+      color: var(--gold);   /* ゴールド文字 ★変更OK★ */
+      font-family: 'Montserrat', sans-serif;
+      letter-spacing: 1.5px;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+
+    /* -------------------------------------------------
+       【商品カード：商品名】
+       例：「Normatec 3 Legs リカバリーシステム」
+
+       ★変更できる項目★
+       - font-size : 文字サイズ（大きくすると目立つ）
+       - font-weight: 太さ
+    ------------------------------------------------- */
+    .product-name {
+      font-size: 13px;      /* 文字サイズ ★変更OK★ */
+      font-weight: 400;     /* 普通の太さ ★変更OK★ */
+      color: var(--dark);
+      margin-bottom: 9px;
+      line-height: 1.5;
+    }
+
+    /* -------------------------------------------------
+       【商品カード：通常価格（取り消し線）】
+       例：「通常価格 ¥182,600」グレーで取り消し線付き
+
+       ★変更できる項目★
+       - color : 文字色（現在グレー）
+    ------------------------------------------------- */
+    .product-price-regular {
+      font-size: 11px;
+      color: var(--gray);            /* グレー文字 ★変更OK★ */
+      text-decoration: line-through; /* 取り消し線 */
+      margin-bottom: 2px;
+    }
+
+    /* -------------------------------------------------
+       【商品カード：会員優待価格】
+       例：「会員優待価格・詳細はお問い合わせ」ゴールド文字
+
+       ★変更できる項目★
+       - color : 文字色（現在ゴールド）
+    ------------------------------------------------- */
+    .product-price-member {
+      font-size: 11px;
+      color: var(--gold);   /* ゴールド文字 ★変更OK★ */
+      font-weight: 500;
+      margin-bottom: 11px;
+    }
+
+    /* -------------------------------------------------
+       【商品カード：LINEお問い合わせボタン】
+       ★★ href="https://line.me/R/ti/p/@110gnfzj" の
+          @110gnfzj を自分のLINE IDに変えてください ★★
+
+       ★変更できる項目★
+       - background : ボタン色（現在黒）
+       - font-size  : ボタン内の文字サイズ
+       - padding    : ボタンの上下余白（大きくするとボタンが高くなる）
+       - border-radius: 角の丸み（2px=ほぼ直角 / 20px=丸）
+    ------------------------------------------------- */
+    .product-btn {
+      display: block;
+      width: 100%;
+      background: var(--black); /* ボタン背景色：黒 ★変更OK★ */
+      color: var(--white);
+      text-align: center;
+      padding: 9px;             /* ボタンの余白 ★変更OK★ */
+      border-radius: 2px;       /* 角の丸み ★変更OK★ */
+      font-size: 12px;          /* 文字サイズ ★変更OK★ */
+      font-weight: 300;
+      transition: background 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+    .product-btn:hover { background: #333; } /* ホバー時：少し明るい黒 */
+
+
+    /* =======================================================
+       【LINEバナー】
+       商品一覧の下に表示される黒い横断幕
+       「気になる商品・優待はLINEから〜」の部分
+
+       ★変更できる項目★
+       - background : バナー背景色（現在黒）
+       - padding    : バナーの内側余白
+    ======================================================= */
+    .line-banner {
+      background: var(--black); /* 背景色：黒 ★変更OK★ */
+      padding: 28px 40px;       /* 余白 ★変更OK★ */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    /* バナー内のテキスト */
+    .line-banner p {
+      color: var(--white);
+      font-size: 13px;   /* 文字サイズ ★変更OK★ */
+      letter-spacing: 0.5px;
+      font-weight: 300;
+    }
+    /* バナー内のLINEボタン */
+    .line-banner-btn {
+      background: var(--line-green); /* ボタン色：LINEグリーン ★変更OK★ */
+      color: var(--white);
+      padding: 10px 28px;
+      border-radius: 28px;           /* 丸みボタン */
+      font-size: 13px;
+      font-weight: 400;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: opacity 0.2s;
+    }
+    .line-banner-btn:hover { opacity: 0.85; }
+
+
+    /* =======================================================
+       【フッター全体】
+       ページ最下部の黒いエリア
+
+       ★変更できる項目★
+       - background : 背景色（現在黒）
+       - padding    : 上下左右の余白
+    ======================================================= */
+    footer {
+      background: var(--black); /* 背景色：黒 ★変更OK★ */
+      border-top: 1px solid #2a2a2a;
+      padding: 28px 40px;       /* 余白 ★変更OK★ */
+      text-align: center;
+    }
+
+    /* -------------------------------------------------
+       【フッター内：サイト名「Member's Offer Market」】
+
+       ★変更できる項目★
+       - color       : 文字色（現在ゴールド）
+       - font-size   : 文字サイズ
+       - letter-spacing: 文字間隔
+    ------------------------------------------------- */
+    .footer-logo {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;      /* 文字サイズ ★変更OK★ */
+      font-weight: 400;
+      color: var(--gold);   /* 文字色：ゴールド ★変更OK★ */
+      letter-spacing: 2px;
+      margin-bottom: 6px;
+    }
+
+    /* -------------------------------------------------
+       【フッター内：クレジット「Supported by PHOEBUS（フォーブス）」】
+
+       ★変更できる項目★
+       - color     : 文字色（現在薄いグレー #888）
+         例: #aaaaaa にするともっと薄くなる
+             #666666 にすると少し濃くなる
+       - font-size : 文字サイズ
+    ------------------------------------------------- */
+    footer p {
+      color: #888;      /* 薄いグレー ★変更OK（#999でもっと薄く等）★ */
+      font-size: 10px;  /* 文字サイズ ★変更OK★ */
+      letter-spacing: 0.5px;
+      font-weight: 300;
+    }
+
+
+    /* =======================================================
+       【レスポンシブ対応：タブレット（幅1100px以下）】
+       タブレットサイズでは6列→4列に切り替える
+    ======================================================= */
+    @media (max-width: 1100px) {
+      .category-grid { grid-template-columns: repeat(4, 1fr); } /* 4列に変更 */
+    }
+
+    /* =======================================================
+       【レスポンシブ対応：スマートフォン（幅768px以下）】
+       スマホではレイアウトを縦向きに最適化する
+       ・ヘッダーのナビを非表示（display:none）
+       ・カテゴリーを2列表示に変更
+       ・商品を2列表示に変更
+    ======================================================= */
+    @media (max-width: 768px) {
+      header { padding: 0 18px; height: 48px; } /* ヘッダーを少し小さく */
+      .header-nav { display: none; }            /* ナビを非表示（スマホ不要） */
+      .header-logo { font-size: 14px; }         /* ロゴ文字を小さく */
+      .container { padding: 0 14px; }           /* コンテナ余白を縮小 */
+      .category-grid { grid-template-columns: repeat(2, 1fr); gap: 9px; } /* 2列 */
+      .category-card { padding: 16px 6px; }
+      .category-emoji { font-size: 17px; }
+      .product-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; } /* 2列 */
+      .product-img, .product-img-placeholder { height: 130px; }
+      .line-banner { padding: 18px 14px; gap: 12px; }
+      footer { padding: 20px 14px; }
+      .section-title { padding: 32px 0 18px; }
+    }
+
+    /* =======================================================
+       【レスポンシブ対応：小さいスマートフォン（幅480px以下）】
+    ======================================================= */
+    @media (max-width: 480px) {
+      .product-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .product-body { padding: 10px; }
+      .product-name { font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- =======================================================
+     【ヘッダー】
+     画面上部の金色のバー
+     ・左：サイト名 + サブタイトル
+     ・右：ナビゲーション + LINEボタン
+     ★ @110gnfzj を自分のLINE IDに変えてください ★
+======================================================= -->
+<header>
+  <div class="header-logo">
+    <!-- ★ サイト名を変えたい場合はここを編集 ★ -->
+    Member's Offer Market
+    <!-- ★ サブタイトルを変えたい場合はここを編集 ★ -->
+    <span>Supported by Wealth Strategy</span>
+  </div>
+  <nav class="header-nav">
+    <a href="#categories">カテゴリー</a>
+    <a href="#products">新着</a>
+    <!-- ★★ @110gnfzj を自分のLINE IDに変更してください ★★ -->
+    <a href="https://line.me/R/ti/p/@110gnfzj" class="header-line-btn">💬 LINEで問い合わせ</a>
+  </nav>
+</header>
+
+
+<!-- =======================================================
+     【カテゴリーセクション】
+     12個のカテゴリーボタンが並ぶエリア
+     ・onclick="showCategory('キー')" のキーで商品セクションと紐づく
+     ・href="#products" でクリック時に商品エリアへスクロール
+======================================================= -->
+<section class="category-section" id="categories">
+  <div class="container">
+    <div class="section-title">
+      <!-- 小さい英語見出し -->
+      <h2>CATEGORIES</h2>
+      <!-- 日本語見出し ★変更OK★ -->
+      <h3>カテゴリーから探す</h3>
+    </div>
+
+    <div class="category-grid">
+
+      <!-- ① New Arrivals ---------------------------------------- -->
+      <!-- onclick のキー 'new' → id="cat-new" の商品セクションを表示 -->
+      <a class="category-card active" onclick="showCategory('new')" href="#products">
+        <span class="category-emoji">🆕</span>
+        <span class="category-name">New Arrivals</span>
+      </a>
+
+      <!-- ② ビューティ・スキンケア -------------------------------- -->
+      <a class="category-card" onclick="showCategory('beauty')" href="#products">
+        <span class="category-emoji">💄</span>
+        <span class="category-name">ビューティ・スキンケア</span>
+      </a>
+
+      <!-- ③ スポーツ・フィットネス -------------------------------- -->
+      <a class="category-card" onclick="showCategory('sports')" href="#products">
+        <span class="category-emoji">💪🏻</span>
+        <span class="category-name">スポーツ・フィットネス</span>
+      </a>
+
+      <!-- ④ 健康・ヘルスケア・サプリ ------------------------------ -->
+      <a class="category-card" onclick="showCategory('health')" href="#products">
+        <span class="category-emoji">💊</span>
+        <span class="category-name">健康・ヘルスケア・サプリ</span>
+      </a>
+
+      <!-- ⑤ ファッション ---------------------------------------- -->
+      <a class="category-card" onclick="showCategory('fashion')" href="#products">
+        <span class="category-emoji">👗</span>
+        <span class="category-name">ファッション</span>
+      </a>
+
+      <!-- ⑥ ジュエリー・アクセサリー ------------------------------ -->
+      <a class="category-card" onclick="showCategory('jewelry')" href="#products">
+        <span class="category-emoji">💎</span>
+        <span class="category-name">ジュエリー・アクセサリー</span>
+      </a>
+
+      <!-- ⑦ スマホ・タブレット・オーディオ ------------------------ -->
+      <a class="category-card" onclick="showCategory('tech')" href="#products">
+        <span class="category-emoji">📱</span>
+        <span class="category-name">スマホ・タブレット・オーディオ</span>
+      </a>
+
+      <!-- ⑧ インテリア・家具・家電 -------------------------------- -->
+      <a class="category-card" onclick="showCategory('interior')" href="#products">
+        <span class="category-emoji">🛋️</span>
+        <span class="category-name">インテリア・家具・家電</span>
+      </a>
+
+      <!-- ⑨ 美容施設優待 ---------------------------------------- -->
+      <a class="category-card" onclick="showCategory('beautysalon')" href="#products">
+        <span class="category-emoji">💆</span>
+        <span class="category-name">美容施設優待</span>
+      </a>
+
+      <!-- ⑩ 飲食優待 -------------------------------------------- -->
+      <a class="category-card" onclick="showCategory('dining')" href="#products">
+        <span class="category-emoji">🍴</span>
+        <span class="category-name">飲食優待</span>
+      </a>
+
+      <!-- ⑪ 体験・レジャー優待 ------------------------------------ -->
+      <a class="category-card" onclick="showCategory('leisure')" href="#products">
+        <span class="category-emoji">🎫</span>
+        <span class="category-name">体験・レジャー優待</span>
+      </a>
+
+      <!-- ⑫ 特別オファー ---------------------------------------- -->
+      <a class="category-card" onclick="showCategory('special')" href="#products">
+        <span class="category-emoji">⭐️</span>
+        <span class="category-name">特別オファー</span>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- =======================================================
+     【商品セクション群】
+     カテゴリーボタンをクリックすると対応するセクションが表示される
+     各セクションのid="cat-キー名" がカテゴリーボタンのキーと対応
+
+     【商品カードの編集方法】
+     ① 商品名変更  → <p class="product-name"> のテキストを変える
+     ② 価格変更    → <p class="product-price-regular"> のテキストを変える
+     ③ 画像差し替え → <div class="product-img-placeholder"> を
+                       <img class="product-img" src="画像URL"> に変える
+     ④ ブランド変更 → <p class="product-brand"> のテキストを変える
+     ⑤ LINE ID変更 → href の @110gnfzj を自分のIDに変える
+======================================================= -->
+<div id="products">
+
+  <!-- =====================================================
+       ① NEW ARRIVALS（新着商品）
+       カテゴリーボタン①とid="cat-new"で紐づいている
+       最初から active クラスが付いているので最初から表示される
+  ===================================================== -->
+  <section class="product-section active" id="cat-new">
+    <div class="container">
+      <div class="product-section-header">
+        <!-- ★ セクションタイトルを変えたい場合はここを編集 ★ -->
+        <h2>🆕 New Arrivals</h2>
+        <!-- ★ 件数バッジのテキスト ★ -->
+        <span class="product-count">毎週月曜更新</span>
+      </div>
+      <div class="product-grid">
+
+        <!-- 【商品カード1】
+             product-img-placeholder → 画像が入ったら <img> タグに差し替え
+             product-brand   → ブランド名
+             product-name    → 商品名
+             product-price-regular → 通常価格（取り消し線付き）
+             product-price-member  → 会員向け表示テキスト
+             href の @110gnfzj   → 自分のLINE IDに変更 -->
+        <div class="product-card">
+          <span class="product-badge">NEW</span>
+          <!-- ★ 画像はここを <img class="product-img" src="URL"> に差し替え ★ -->
+          <div class="product-img-placeholder">📦 商品画像</div>
+          <div class="product-body">
+            <p class="product-brand">NORMATEC</p>
+            <p class="product-name">Normatec 3 Legs リカバリーシステム</p>
+            <p class="product-price-regular">通常価格 ¥182,600</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <!-- 【商品カード2】 -->
+        <div class="product-card">
+          <span class="product-badge">NEW</span>
+          <div class="product-img-placeholder">📦 商品画像</div>
+          <div class="product-body">
+            <p class="product-brand">VITAS</p>
+            <p class="product-name">ホエイプロテイン100 1kg ストロベリー</p>
+            <p class="product-price-regular">通常価格 ¥5,480</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <!-- 【商品カード3】 -->
+        <div class="product-card">
+          <span class="product-badge">NEW</span>
+          <img class="product-img" src="https://sspark.genspark.ai/cfimages?u1=1V5U3kJ2PhFEiGyU20iMKIpVhCE28d8RRtAXMCIkzKjrqhYMTqMIC6GZOcE20efo9CZ%2F8UwCIuANE4ZRNewMsi4PMz79ZDShO8WZMSs0%2FtxJtAuS1Q%3D%3D&u2=wcS%2BkESiuFyGoXD0&width=1024" alt="DENBA Health ハイグレード">
+          <div class="product-body">
+            <p class="product-brand">DENBA</p>
+            <p class="product-name">DENBA Health ハイグレード</p>
+            <p class="product-price-regular">通常価格 ¥900,000</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <!-- 【商品カード4】 -->
+        <div class="product-card">
+          <span class="product-badge">NEW</span>
+          <div class="product-img-placeholder">📦 商品画像</div>
+          <div class="product-body">
+            <p class="product-brand">LUCIER</p>
+            <p class="product-name">LUCIER ナイトレンズ RYAN BLACK</p>
+            <p class="product-price-regular">通常価格 ¥20,500〜</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <!-- ReFa BEAUTECH DRYER BX W（NEW） -->
+        <div class="product-card">
+          <span class="product-badge">NEW</span>
+          <img class="product-img" src="https://sspark.genspark.ai/cfimages?u1=9wzdwplU59OuFuVdSjItYB2fYqCAYBITtpCZ3laT1BzPHPsm66bhRe0u7NsPXZcs5SPX%2BABogl9d2u6Gyg4fKzFHleZWV9NdMzaru8tqqeq5Z4lYUH0%3D&u2=f7UMPr6CemR0QCt%2F&width=1024" alt="ReFa BEAUTECH DRYER BX W">
+          <div class="product-body">
+            <p class="product-brand">ReFa</p>
+            <p class="product-name">ReFa BEAUTECH DRYER BX W</p>
+            <p class="product-price-regular">通常価格 ¥74,800</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <!-- ReFa BEAUTECH RESETTER LIFT（NEW） -->
+        <div class="product-card">
+          <span class="product-badge">NEW</span>
+          <img class="product-img" src="https://sspark.genspark.ai/cfimages?u1=UUhoc5qiHmmvj24UmYa%2B2E%2B%2BKUrNHg2KzgomUYu8zjD1t48fbi%2BtkZSx24LU1dWjsr1yyB4bPCCzpWHZAoEScx3lFFGaRLMx%2B5h6kTPOxdjKmIth%2F%2FdenTRJ%2BPU%3D&u2=ZFOT%2FGSbPGoDRkmc&width=1024" alt="ReFa BEAUTECH RESETTER LIFT">
+          <div class="product-body">
+            <p class="product-brand">ReFa</p>
+            <p class="product-name">ReFa BEAUTECH RESETTER LIFT</p>
+            <p class="product-price-regular">通常価格 ¥48,400</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =====================================================
+       ② ビューティ・スキンケア
+  ===================================================== -->
+  <section class="product-section" id="cat-beauty">
+    <div class="container">
+      <div class="product-section-header">
+        <h2>💄 ビューティ・スキンケア</h2>
+        <span class="product-count">11件</span>
+      </div>
+      <div class="product-grid">
+
+        <!-- 商品4: ReFa BEAUTECH DRYER BX W -->
+        <div class="product-card">
+          <img class="product-img" src="https://sspark.genspark.ai/cfimages?u1=9wzdwplU59OuFuVdSjItYB2fYqCAYBITtpCZ3laT1BzPHPsm66bhRe0u7NsPXZcs5SPX%2BABogl9d2u6Gyg4fKzFHleZWV9NdMzaru8tqqeq5Z4lYUH0%3D&u2=f7UMPr6CemR0QCt%2F&width=1024" alt="ReFa BEAUTECH DRYER BX W">
+          <div class="product-body">
+            <p class="product-brand">ReFa</p>
+            <p class="product-name">ReFa BEAUTECH DRYER BX W</p>
+            <p class="product-price-regular">通常価格 ¥74,800</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <!-- 商品5: ReFa BEAUTECH DRYER BX -->
+        <div class="product-card">
+          <img class="product-img" src="https://sspark.genspark.ai/cfimages?u1=MMKCaKott3sq7fl6KxRX7iJOvdlfmAwmDm5eCvGudYXarhiQytr8WdccrtDf4s1d0j5e71ssD843TOsm4z1dRCJBtOQYX3myiO4lOgnKRZ87g5JpgN1%2BRC0zbg%2FI&u2=Vku2Gd5WB7JM4VcL&width=1024" alt="ReFa BEAUTECH DRYER BX">
+          <div class="product-body">
+            <p class="product-brand">ReFa</p>
+            <p class="product-name">ReFa BEAUTECH DRYER BX</p>
+            <p class="product-price-regular">通常価格 ¥58,300</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <!-- 商品6: ReFa BEAUTECH DRYER PRO -->
+        <div class="product-card">
+          <img class="product-img" src="https://sspark.genspark.ai/cfimages?u1=2zYyuMI7H0pyVmKadFm7FARTLyFC%2FUCHK7hGqZHzfSVmskQEM4QDjh7hpjdj43CLWdedcKJS6Anf9Yc62pHSNHzQmdqxeC7KWSXcEO7W%2BXDAeh3o%2BVXqJw%3D%3D&u2=LtGgOwgdQcL%2BsUNm8AhftYMhlCnCgbGrLyJtcV2oqRALVnXdDJZpoIVUnnq4WiG7RZ1VlusJhB1TVdKAio2eRKGuRJqNxBOF%2FH9xacMC78czYAwSsSfUvg%3D%3D&width=1024" alt="ReFa BEAUTECH DRYER PRO">
+          <div class="product-body">
+            <p class="product-brand">ReFa</p>
+            <p class="product-name">ReFa BEAUTECH DRYER PRO</p>
+            <p class="product-price-regular">通常価格 ¥43,000</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <!-- 商品7: ReFa BEAUTECH DRYER -->
+        <div class="product-card">
+          <img class="product-img" src="https://sspark.genspark.ai/cfimages?u1=3EU6GHBMmroVeGFQ7yz69Yt%2FwKKV%2BMcRAE%2BbB4ZvVGK5qKh%2BDObVziqf%2Fur8KrcLiUmYMqns76zAJwi5IRmoTAHheeguGAukclaBRTclqG1pJaWjCmssqt3a&u2=EKdQAc%2BbyQUTFOXh&width=1024" alt="ReFa BEAUTECH DRYER">
+          <div class="product-body">
+            <p class="product-brand">ReFa</p>
+            <p class="product-name">ReFa BEAUTECH DRYER</p>
+            <p class="product-price-regular">通常価格 ¥40,000</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <!-- 商品8: ReFa BEAUTECH DRYER SE -->
+        <div class="product-card">
+          <img class="product-img" src="https://sspark.genspark.ai/cfimages?u1=KnuM%2FRhqIEvQDiqj%2FDyX%2FZmOdIJpPLwPWnhOMIARMTnl0G5ZjABd4FuZzJZlBqWFqkAnkdJIYngp3yEObiwxnTB0ip33d4H1oVJD1e8%2FxvbYhIgLTaVyEl9%2BVV0d&u2=bXMdQPkk2SzG6%2Fe7&width=1024" alt="ReFa BEAUTECH DRYER SE">
+          <div class="product-body">
+            <p class="product-brand">ReFa</p>
+            <p class="product-name">ReFa BEAUTECH DRYER SE</p>
+            <p class="product-price-regular">通常価格 ¥33,000</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <!-- 商品9: ReFa BEAUTECH DRYER S+ -->
+        <div class="product-card">
+          <img class="product-img" src="https://sspark.genspark.ai/cfimages?u1=SfueMPLnb3KvOkTiSi%2Favvrsxlr8LZre5bpEhhQSCBL5ToEAvHUChi4iHUEkEEkVnCd3X7SXUL2fP4exI1nPQa2vY%2BU%2FqgiOmJZIm%2FxdXuk1vzpAzmPU3eLNm%2BkHUxrvMQ%3D%3D&u2=RZpJYQlrCDLmEGMk&width=1024" alt="ReFa BEAUTECH DRYER S+">
+          <div class="product-body">
+            <p class="product-brand">ReFa</p>
+            <p class="product-name">ReFa BEAUTECH DRYER S+</p>
+            <p class="product-price-regular">通常価格 ¥39,600</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <!-- 商品10: ReFa BEAUTECH DRYER SMART W -->
+        <div class="product-card">
+          <img class="product-img" src="https://sspark.genspark.ai/cfimages?u1=PI1vAzhVWsxOqKDEMzKhDxJ0iQ0z4LDVMuHI%2BOfEIM49cfPHoGeFMZdGzoUKJh5v5MhOlusIz7HrinwrKCD9MjLKwWfPVq4Oq7e40Env6MIGjiApE8M36C4Oo6npLliTxhk%3D&u2=PSBBqtuKqqZcN%2FRP&width=1024" alt="ReFa BEAUTECH DRYER SMART W">
+          <div class="product-body">
+            <p class="product-brand">ReFa</p>
+            <p class="product-name">ReFa BEAUTECH DRYER SMART W</p>
+            <p class="product-price-regular">通常価格 ¥40,000</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <!-- 商品11: ReFa BEAUTECH DRYER SMART -->
+        <div class="product-card">
+          <img class="product-img" src="https://sspark.genspark.ai/cfimages?u1=JKSBqUWG3%2FFFxEXf6baLtrxAHK8nppIerxJ9CVJr5dJ3JrRwgJy1VM%2FTX21625DJU6EnekwS7UcUf3Nx23p%2F4bGLavsZG%2BWUo1l%2BzVT1%2B8tCsV3QCF5fNbs0%2BWYTaHL5&u2=gLfl5FUw9uUhzR1y&width=1024" alt="ReFa BEAUTECH DRYER SMART">
+          <div class="product-body">
+            <p class="product-brand">ReFa</p>
+            <p class="product-name">ReFa BEAUTECH DRYER SMART</p>
+            <p class="product-price-regular">通常価格 ¥38,000</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <!-- 商品12: ReFa MONTECATINI DRYER -->
+        <div class="product-card">
+          <img class="product-img" src="https://sspark.genspark.ai/cfimages?u1=YjeeCPjYUvWvAhOS0%2FxN8w%2Fd8oBqjHM%2FhD%2BNWy%2Fn0ypFel780YiQijiWSIYwvfCVkj9pczwhi6GK6chVCQFE%2FiHpK2ajp5d4EpaCQaL8m7XbcCBSqTZxYE82t4U%3D&u2=5c%2BrtmmfCEuo%2B9j4&width=1024" alt="ReFa MONTECATINI DRYER">
+          <div class="product-body">
+            <p class="product-brand">ReFa</p>
+            <p class="product-name">ReFa MONTECATINI DRYER</p>
+            <p class="product-price-regular">通常価格 ¥121,000</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <!-- 商品13: ReFa BEAUTECH RESETTER LIFT -->
+        <div class="product-card">
+          <img class="product-img" src="https://sspark.genspark.ai/cfimages?u1=UUhoc5qiHmmvj24UmYa%2B2E%2B%2BKUrNHg2KzgomUYu8zjD1t48fbi%2BtkZSx24LU1dWjsr1yyB4bPCCzpWHZAoEScx3lFFGaRLMx%2B5h6kTPOxdjKmIth%2F%2FdenTRJ%2BPU%3D&u2=ZFOT%2FGSbPGoDRkmc&width=1024" alt="ReFa BEAUTECH RESETTER LIFT">
+          <div class="product-body">
+            <p class="product-brand">ReFa</p>
+            <p class="product-name">ReFa BEAUTECH RESETTER LIFT</p>
+            <p class="product-price-regular">通常価格 ¥48,400</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <!-- 商品14: ReFa BEAUTECH RESETTER -->
+        <div class="product-card">
+          <img class="product-img" src="https://sspark.genspark.ai/cfimages?u1=f4oJaoAmuzhwCR0v4KJ%2FHeEjDA5Ska7GFNMIZql3X1guMHmEyOuy5D3vrzmgnUjiriC8kuxwUIUkwC74HxiWukLNQ8Y9pw%2FHmWUWzYCCcO1f05HrfRr6u3YSuLn3&u2=7jJWUEAxG8aTKLMb&width=1024" alt="ReFa BEAUTECH RESETTER">
+          <div class="product-body">
+            <p class="product-brand">ReFa</p>
+            <p class="product-name">ReFa BEAUTECH RESETTER</p>
+            <p class="product-price-regular">通常価格 ¥38,500</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =====================================================
+       ③ スポーツ・フィットネス
+  ===================================================== -->
+  <section class="product-section" id="cat-sports">
+    <div class="container">
+      <div class="product-section-header">
+        <h2>💪🏻 スポーツ・フィットネス</h2>
+        <span class="product-count">7件</span>
+      </div>
+      <div class="product-grid">
+
+        <div class="product-card">
+          <div class="product-img-placeholder">📦 商品画像</div>
+          <div class="product-body">
+            <p class="product-brand">NORMATEC</p>
+            <p class="product-name">Normatec 3 Legs リカバリーシステム</p>
+            <p class="product-price-regular">通常価格 ¥182,600</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-img-placeholder">📦 商品画像</div>
+          <div class="product-body">
+            <p class="product-brand">NORMATEC</p>
+            <p class="product-name">Normatec Premier Standard</p>
+            <p class="product-price-regular">通常価格 ¥222,200</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-img-placeholder">📦 商品画像</div>
+          <div class="product-body">
+            <p class="product-brand">GAME READY</p>
+            <p class="product-name">Game Ready GI2 リカバリーシステム（圧迫＋アイシング）</p>
+            <p class="product-price-regular">通常価格 ¥660,000</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-img-placeholder">📦 商品画像</div>
+          <div class="product-body">
+            <p class="product-brand">GAME READY</p>
+            <p class="product-name">Game Ready 部位別ラップ（膝・肩・腰など）</p>
+            <p class="product-price-regular">通常価格 ¥82,500〜</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <!-- DENBA Health ハイグレード（スポーツ向け） -->
+        <div class="product-card">
+          <img class="product-img" src="https://sspark.genspark.ai/cfimages?u1=1V5U3kJ2PhFEiGyU20iMKIpVhCE28d8RRtAXMCIkzKjrqhYMTqMIC6GZOcE20efo9CZ%2F8UwCIuANE4ZRNewMsi4PMz79ZDShO8WZMSs0%2FtxJtAuS1Q%3D%3D&u2=wcS%2BkESiuFyGoXD0&width=1024" alt="DENBA Health ハイグレード">
+          <div class="product-body">
+            <p class="product-brand">DENBA</p>
+            <p class="product-name">DENBA Health ハイグレード</p>
+            <p class="product-price-regular">通常価格 ¥900,000</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <!-- DENBA Health スタンダード（スポーツ向け） -->
+        <div class="product-card">
+          <img class="product-img" src="https://sspark.genspark.ai/cfimages?u1=zNYBlzMjRJvMnGCRoMW5bvvOXPhX8LbRRp%2FZOcJJ2DHJcnGfo6f%2B%2Bip0aZV6l%2FrvBinyswKa6qEbleGU3mmwPKeK9xPRkPxImvzAE29lbAUrWg%3D%3D&u2=eJtwp30xV576xQfr&width=1024" alt="DENBA Health スタンダード">
+          <div class="product-body">
+            <p class="product-brand">DENBA</p>
+            <p class="product-name">DENBA Health スタンダード</p>
+            <p class="product-price-regular">通常価格 ¥550,000</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <!-- DENBA Charge（スポーツ向け） -->
+        <div class="product-card">
+          <img class="product-img" src="https://sspark.genspark.ai/cfimages?u1=hATY35sBaW%2FOapUyEmTmU2acxg9hwbTRH3kmdvrUs%2FDVFoyRtBHM1Ovqh0cVEuROxbZLxbwk99sGIB%2FzTmZncdHXDQqTQR9IW648YrgmiuwL1%2F3cXRUOZ1Ezo1g2Ng%3D%3D&u2=a%2BLFhIHSOMRsjzy8&width=1024" alt="DENBA Charge">
+          <div class="product-body">
+            <p class="product-brand">DENBA</p>
+            <p class="product-name">DENBA Charge</p>
+            <p class="product-price-regular">お問い合わせください</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =====================================================
+       ④ 健康・ヘルスケア・サプリ
+  ===================================================== -->
+  <section class="product-section" id="cat-health">
+    <div class="container">
+      <div class="product-section-header">
+        <h2>💊 健康・ヘルスケア・サプリ</h2>
+        <span class="product-count">6件</span>
+      </div>
+      <div class="product-grid">
+
+        <!-- 商品1: DENBA Health ハイグレード -->
+        <div class="product-card">
+          <img class="product-img" src="https://sspark.genspark.ai/cfimages?u1=1V5U3kJ2PhFEiGyU20iMKIpVhCE28d8RRtAXMCIkzKjrqhYMTqMIC6GZOcE20efo9CZ%2F8UwCIuANE4ZRNewMsi4PMz79ZDShO8WZMSs0%2FtxJtAuS1Q%3D%3D&u2=wcS%2BkESiuFyGoXD0&width=1024" alt="DENBA Health ハイグレード">
+          <div class="product-body">
+            <p class="product-brand">DENBA</p>
+            <p class="product-name">DENBA Health ハイグレード</p>
+            <p class="product-price-regular">通常価格 ¥900,000</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <!-- 商品2: DENBA Health スタンダード -->
+        <div class="product-card">
+          <img class="product-img" src="https://sspark.genspark.ai/cfimages?u1=zNYBlzMjRJvMnGCRoMW5bvvOXPhX8LbRRp%2FZOcJJ2DHJcnGfo6f%2B%2Bip0aZV6l%2FrvBinyswKa6qEbleGU3mmwPKeK9xPRkPxImvzAE29lbAUrWg%3D%3D&u2=eJtwp30xV576xQfr&width=1024" alt="DENBA Health スタンダード">
+          <div class="product-body">
+            <p class="product-brand">DENBA</p>
+            <p class="product-name">DENBA Health スタンダード</p>
+            <p class="product-price-regular">通常価格 ¥550,000</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <!-- 商品3: DENBA Charge -->
+        <div class="product-card">
+          <img class="product-img" src="https://sspark.genspark.ai/cfimages?u1=hATY35sBaW%2FOapUyEmTmU2acxg9hwbTRH3kmdvrUs%2FDVFoyRtBHM1Ovqh0cVEuROxbZLxbwk99sGIB%2FzTmZncdHXDQqTQR9IW648YrgmiuwL1%2F3cXRUOZ1Ezo1g2Ng%3D%3D&u2=a%2BLFhIHSOMRsjzy8&width=1024" alt="DENBA Charge">
+          <div class="product-body">
+            <p class="product-brand">DENBA</p>
+            <p class="product-name">DENBA Charge</p>
+            <p class="product-price-regular">お問い合わせください</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-img-placeholder">📦 商品画像</div>
+          <div class="product-body">
+            <p class="product-brand">VITAS</p>
+            <p class="product-name">ホエイプロテイン100 1kg</p>
+            <p class="product-price-regular">通常価格 ¥5,480</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-img-placeholder">📦 商品画像</div>
+          <div class="product-body">
+            <p class="product-brand">VITAS</p>
+            <p class="product-name">VITA POWER マルチビタミン 120粒</p>
+            <p class="product-price-regular">通常価格 ¥2,480</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-img-placeholder">📦 商品画像</div>
+          <div class="product-body">
+            <p class="product-brand">LUCIER</p>
+            <p class="product-name">LUCIER ナイトレンズ（睡眠改善・ブルーライトカット）</p>
+            <p class="product-price-regular">通常価格 ¥20,500〜</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =====================================================
+       ⑤ ファッション
+  ===================================================== -->
+  <section class="product-section" id="cat-fashion">
+    <div class="container">
+      <div class="product-section-header">
+        <h2>👗 ファッション</h2>
+        <span class="product-count">商品準備中</span>
+      </div>
+      <div class="product-grid">
+        <div class="product-card">
+          <div class="product-img-placeholder">📦 商品画像</div>
+          <div class="product-body">
+            <p class="product-brand">FASHION</p>
+            <p class="product-name">商品名をここに入力</p>
+            <p class="product-price-regular">通常価格 ¥00,000</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =====================================================
+       ⑥ ジュエリー・アクセサリー
+  ===================================================== -->
+  <section class="product-section" id="cat-jewelry">
+    <div class="container">
+      <div class="product-section-header">
+        <h2>💎 ジュエリー・アクセサリー</h2>
+        <span class="product-count">商品準備中</span>
+      </div>
+      <div class="product-grid">
+        <div class="product-card">
+          <div class="product-img-placeholder">📦 商品画像</div>
+          <div class="product-body">
+            <p class="product-brand">JEWELRY</p>
+            <p class="product-name">商品名をここに入力</p>
+            <p class="product-price-regular">通常価格 ¥00,000</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =====================================================
+       ⑦ スマホ・タブレット・オーディオ
+  ===================================================== -->
+  <section class="product-section" id="cat-tech">
+    <div class="container">
+      <div class="product-section-header">
+        <h2>📱 スマホ・タブレット・オーディオ</h2>
+        <span class="product-count">商品準備中</span>
+      </div>
+      <div class="product-grid">
+        <div class="product-card">
+          <div class="product-img-placeholder">📦 商品画像</div>
+          <div class="product-body">
+            <p class="product-brand">TECH</p>
+            <p class="product-name">商品名をここに入力</p>
+            <p class="product-price-regular">通常価格 ¥00,000</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =====================================================
+       ⑧ インテリア・家具・家電
+  ===================================================== -->
+  <section class="product-section" id="cat-interior">
+    <div class="container">
+      <div class="product-section-header">
+        <h2>🛋️ インテリア・家具・家電</h2>
+        <span class="product-count">商品準備中</span>
+      </div>
+      <div class="product-grid">
+        <div class="product-card">
+          <div class="product-img-placeholder">📦 商品画像</div>
+          <div class="product-body">
+            <p class="product-brand">INTERIOR</p>
+            <p class="product-name">商品名をここに入力</p>
+            <p class="product-price-regular">通常価格 ¥00,000</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =====================================================
+       ⑨ 美容施設優待
+  ===================================================== -->
+  <section class="product-section" id="cat-beautysalon">
+    <div class="container">
+      <div class="product-section-header">
+        <h2>💆 美容施設優待</h2>
+        <span class="product-count">準備中</span>
+      </div>
+      <div class="product-grid">
+        <div class="product-card">
+          <div class="product-img-placeholder">📦 施設画像</div>
+          <div class="product-body">
+            <p class="product-brand">BEAUTY SALON</p>
+            <!-- ★ 施設名をここに入力 ★ -->
+            <p class="product-name">施設名をここに入力</p>
+            <p class="product-price-regular">通常価格 ¥00,000/月</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =====================================================
+       ⑩ 飲食優待
+  ===================================================== -->
+  <section class="product-section" id="cat-dining">
+    <div class="container">
+      <div class="product-section-header">
+        <h2>🍴 飲食優待</h2>
+        <span class="product-count">準備中</span>
+      </div>
+      <div class="product-grid">
+        <div class="product-card">
+          <div class="product-img-placeholder">📦 店舗画像</div>
+          <div class="product-body">
+            <p class="product-brand">DINING</p>
+            <!-- ★ 店舗名をここに入力 ★ -->
+            <p class="product-name">店舗名をここに入力</p>
+            <p class="product-price-regular">通常価格 ¥00,000</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =====================================================
+       ⑪ 体験・レジャー優待
+  ===================================================== -->
+  <section class="product-section" id="cat-leisure">
+    <div class="container">
+      <div class="product-section-header">
+        <h2>🎫 体験・レジャー優待</h2>
+        <span class="product-count">準備中</span>
+      </div>
+      <div class="product-grid">
+        <div class="product-card">
+          <div class="product-img-placeholder">📦 体験画像</div>
+          <div class="product-body">
+            <p class="product-brand">LEISURE</p>
+            <!-- ★ 体験・施設名をここに入力 ★ -->
+            <p class="product-name">体験・施設名をここに入力</p>
+            <p class="product-price-regular">通常価格 ¥00,000</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =====================================================
+       ⑫ 特別オファー
+  ===================================================== -->
+  <section class="product-section" id="cat-special">
+    <div class="container">
+      <div class="product-section-header">
+        <h2>⭐️ 特別オファー</h2>
+        <span class="product-count">準備中</span>
+      </div>
+      <div class="product-grid">
+        <div class="product-card">
+          <div class="product-img-placeholder">📦 商品画像</div>
+          <div class="product-body">
+            <p class="product-brand">SPECIAL</p>
+            <!-- ★ オファー名をここに入力 ★ -->
+            <p class="product-name">オファー名をここに入力</p>
+            <p class="product-price-regular">通常価格 ¥00,000</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@110gnfzj" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /products -->
+
+
+<!-- =======================================================
+     【LINEバナー】
+     ページ下部の黒い横断幕
+     ★ @110gnfzj を自分のLINE IDに変更してください ★
+     ★ テキストを変えたい場合は <p> タグ内を編集 ★
+======================================================= -->
+<div class="line-banner">
+  <p>🔔 気になる商品・優待はLINEからお気軽にお問い合わせください</p>
+  <a href="https://line.me/R/ti/p/@110gnfzj" class="line-banner-btn">
+    💬 LINEで問い合わせる▶
+  </a>
+</div>
+
+
+<!-- =======================================================
+     【フッター】
+     ページ最下部
+     ★ サイト名・クレジットを変えたい場合はここを編集 ★
+======================================================= -->
+<footer>
+  <!-- ★ フッターのサイト名 ★ -->
+  <div class="footer-logo">Member's Offer Market</div>
+  <!-- ★ クレジット表記（薄いグレーで表示） ★ -->
+  <p>Supported by PHOEBUS（フォーブス）</p>
+</footer>
+
+
+<!-- =======================================================
+     【JavaScript：カテゴリー切り替え機能】
+     カテゴリーボタンをクリックすると動く仕組み
+     ここは基本的に触らなくてOK
+
+     動作の流れ：
+     1. 全ての商品セクションを非表示にする
+     2. 全てのボタンのゴールド枠を外す
+     3. クリックされたカテゴリーの商品セクションだけ表示する
+     4. クリックされたボタンだけゴールド枠にする
+======================================================= -->
+<script>
+  function showCategory(cat) {
+    // ① 全商品セクションを非表示にする（active クラスを外す）
+    document.querySelectorAll('.product-section').forEach(el => {
+      el.classList.remove('active');
+    });
+    // ② 全カテゴリーボタンのアクティブ状態を外す
+    document.querySelectorAll('.category-card').forEach(el => {
+      el.classList.remove('active');
+    });
+    // ③ クリックされたカテゴリーの商品セクションを表示する
+    //    例: cat='sports' → id="cat-sports" のセクションを表示
+    document.getElementById('cat-' + cat).classList.add('active');
+    // ④ クリックされたボタンをゴールド枠にする
+    event.currentTarget.classList.add('active');
+  }
+</script>
+
+</body>
+</html>
