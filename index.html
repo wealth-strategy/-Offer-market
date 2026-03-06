@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ATHLETE SELECT | プロが本当に使うものだけを。</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      background: #FFFFFF;
+      color: #2C2C2C;
+      line-height: 1.6;
+    }
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; display: block; }
+
+    /* ===== COLOR VARIABLES ===== */
+    :root {
+      --gold: #D4AF37;
+      --gold-light: #F5E6A3;
+      --black: #1A1A1A;
+      --dark: #2C2C2C;
+      --gray: #888888;
+      --light-gray: #F8F8F8;
+      --border: #E8E0C8;
+      --white: #FFFFFF;
+      --line-green: #06C755;
+    }
+
+    /* ===== HEADER ===== */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: var(--gold);
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .header-logo {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 22px;
+      color: var(--white);
+      letter-spacing: 3px;
+    }
+    .header-logo span {
+      font-size: 11px;
+      display: block;
+      letter-spacing: 2px;
+      font-weight: 300;
+      opacity: 0.9;
+    }
+    .header-nav {
+      display: flex;
+      gap: 28px;
+      align-items: center;
+    }
+    .header-nav a {
+      color: var(--white);
+      font-size: 13px;
+      letter-spacing: 1px;
+      opacity: 0.9;
+      transition: opacity 0.2s;
+    }
+    .header-nav a:hover { opacity: 1; }
+    .header-line-btn {
+      background: var(--line-green);
+      color: var(--white) !important;
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-weight: 500;
+      opacity: 1 !important;
+      font-size: 13px;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      background: linear-gradient(135deg, #1A1A1A 0%, #2C2C2C 50%, #1A1A1A 100%);
+      padding: 80px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 40px,
+        rgba(212,175,55,0.03) 40px,
+        rgba(212,175,55,0.03) 80px
+      );
+    }
+    .hero-content { position: relative; z-index: 1; }
+    .hero-sub {
+      font-size: 12px;
+      letter-spacing: 4px;
+      color: var(--gold);
+      margin-bottom: 16px;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .hero-title {
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: 2px;
+      margin-bottom: 16px;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .hero-title-ja {
+      font-size: clamp(14px, 2vw, 18px);
+      color: rgba(255,255,255,0.7);
+      font-weight: 300;
+      margin-bottom: 32px;
+      letter-spacing: 2px;
+    }
+    .hero-badge {
+      display: inline-block;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      padding: 8px 24px;
+      font-size: 12px;
+      letter-spacing: 3px;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    /* ===== MAIN CONTAINER ===== */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    /* ===== SECTION TITLE ===== */
+    .section-title {
+      text-align: center;
+      padding: 48px 0 32px;
+    }
+    .section-title h2 {
+      font-size: 13px;
+      letter-spacing: 4px;
+      color: var(--gold);
+      font-family: 'Montserrat', sans-serif;
+      margin-bottom: 8px;
+    }
+    .section-title h3 {
+      font-size: clamp(20px, 2.5vw, 28px);
+      font-weight: 700;
+      color: var(--dark);
+      letter-spacing: 1px;
+    }
+
+    /* ===== CATEGORY GRID ===== */
+    .category-section {
+      background: var(--white);
+      padding-bottom: 48px;
+    }
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+    .category-card {
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      background: var(--white);
+      display: block;
+    }
+    .category-card:hover {
+      border-color: var(--gold);
+      box-shadow: 0 4px 20px rgba(212,175,55,0.2);
+      transform: translateY(-2px);
+    }
+    .category-card.active {
+      border-color: var(--gold);
+      background: linear-gradient(135deg, #FDF8E8, #FFFFFF);
+    }
+    .category-emoji {
+      font-size: 28px;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .category-name {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--dark);
+      letter-spacing: 0.5px;
+    }
+
+    /* ===== PRODUCT SECTION ===== */
+    .product-section {
+      background: var(--light-gray);
+      padding: 48px 0;
+      display: none;
+    }
+    .product-section.active { display: block; }
+
+    .product-section-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .product-section-header h2 {
+      font-size: clamp(18px, 2vw, 24px);
+      font-weight: 700;
+      color: var(--dark);
+    }
+    .product-count {
+      font-size: 13px;
+      color: var(--gray);
+      background: var(--white);
+      border: 1px solid var(--border);
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    /* ===== PRODUCT CARD ===== */
+    .product-card {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+    .product-card:hover {
+      border-color: var(--gold);
+      box-shadow: 0 8px 32px rgba(212,175,55,0.2);
+      transform: translateY(-3px);
+    }
+    .product-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: var(--gold);
+      color: var(--white);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-family: 'Montserrat', sans-serif;
+      z-index: 1;
+    }
+    .product-img {
+      width: 100%;
+      height: 200px;
+      object-fit: contain;
+      background: var(--light-gray);
+      padding: 16px;
+    }
+    .product-img-placeholder {
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(135deg, #F0F0F0, #E8E8E8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gray);
+      font-size: 13px;
+    }
+    .product-body {
+      padding: 16px;
+    }
+    .product-brand {
+      font-size: 11px;
+      color: var(--gold);
+      font-family: 'Montserrat', sans-serif;
+      letter-spacing: 2px;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+    .product-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+    .product-price-regular {
+      font-size: 12px;
+      color: var(--gray);
+      text-decoration: line-through;
+      margin-bottom: 2px;
+    }
+    .product-price-member {
+      font-size: 13px;
+      color: var(--gold);
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .product-btn {
+      display: block;
+      width: 100%;
+      background: var(--black);
+      color: var(--white);
+      text-align: center;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      transition: background 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+    .product-btn:hover { background: #333; }
+
+    /* ===== NEW ARRIVALS ===== */
+    .new-arrivals-section {
+      padding: 48px 0 64px;
+      background: var(--white);
+    }
+
+    /* ===== LINE BANNER ===== */
+    .line-banner {
+      background: var(--black);
+      padding: 32px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .line-banner p {
+      color: var(--white);
+      font-size: 15px;
+      letter-spacing: 1px;
+    }
+    .line-banner-btn {
+      background: var(--line-green);
+      color: var(--white);
+      padding: 12px 32px;
+      border-radius: 30px;
+      font-size: 15px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: opacity 0.2s;
+    }
+    .line-banner-btn:hover { opacity: 0.85; }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: var(--black);
+      border-top: 1px solid #333;
+      padding: 40px;
+      text-align: center;
+    }
+    .footer-logo {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 3px;
+      margin-bottom: 12px;
+    }
+    footer p {
+      color: var(--gray);
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      .category-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+    @media (max-width: 768px) {
+      header { padding: 0 20px; height: 56px; }
+      .header-nav { display: none; }
+      .header-logo { font-size: 18px; }
+      .hero { padding: 56px 20px; }
+      .container { padding: 0 20px; }
+      .category-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .category-card { padding: 16px 8px; }
+      .product-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .product-img, .product-img-placeholder { height: 150px; }
+      .line-banner { padding: 24px 20px; gap: 16px; }
+      footer { padding: 32px 20px; }
+    }
+    @media (max-width: 480px) {
+      .product-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .product-body { padding: 12px; }
+      .product-name { font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header>
+  <div class="header-logo">
+    ATHLETE SELECT
+    <span>MEMBER'S EXCLUSIVE</span>
+  </div>
+  <nav class="header-nav">
+    <a href="#categories">カテゴリー</a>
+    <a href="#new-arrivals">新着</a>
+    <a href="https://line.me/R/ti/p/@YOURLINEID" class="header-line-btn">💬 LINEで問い合わせ</a>
+  </nav>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="hero-content">
+    <p class="hero-sub">MEMBER'S EXCLUSIVE SELECTION</p>
+    <h1 class="hero-title">ATHLETE SELECT</h1>
+    <p class="hero-title-ja">プロが本当に使うものだけを。</p>
+    <span class="hero-badge">INVITATION ONLY</span>
+  </div>
+</section>
+
+<!-- ===== CATEGORIES ===== -->
+<section class="category-section" id="categories">
+  <div class="container">
+    <div class="section-title">
+      <h2>CATEGORIES</h2>
+      <h3>カテゴリーから探す</h3>
+    </div>
+    <div class="category-grid">
+      <a class="category-card active" onclick="showCategory('new')" href="#products">
+        <span class="category-emoji">🆕</span>
+        <span class="category-name">NEW ARRIVALS</span>
+      </a>
+      <a class="category-card" onclick="showCategory('beauty')" href="#products">
+        <span class="category-emoji">💄</span>
+        <span class="category-name">ビューティー・スキンケア</span>
+      </a>
+      <a class="category-card" onclick="showCategory('sports')" href="#products">
+        <span class="category-emoji">💪</span>
+        <span class="category-name">スポーツ・フィットネス</span>
+      </a>
+      <a class="category-card" onclick="showCategory('health')" href="#products">
+        <span class="category-emoji">🏥</span>
+        <span class="category-name">健康・ヘルスケア・サプリ</span>
+      </a>
+      <a class="category-card" onclick="showCategory('fashion')" href="#products">
+        <span class="category-emoji">👗</span>
+        <span class="category-name">ファッション</span>
+      </a>
+      <a class="category-card" onclick="showCategory('jewelry')" href="#products">
+        <span class="category-emoji">💎</span>
+        <span class="category-name">ジュエリー・アクセサリー・腕時計</span>
+      </a>
+      <a class="category-card" onclick="showCategory('tech')" href="#products">
+        <span class="category-emoji">📱</span>
+        <span class="category-name">スマホ・タブレット・オーディオ</span>
+      </a>
+      <a class="category-card" onclick="showCategory('interior')" href="#products">
+        <span class="category-emoji">🛋️</span>
+        <span class="category-name">インテリア・家具・家電</span>
+      </a>
+      <a class="category-card" onclick="showCategory('salon')" href="#products">
+        <span class="category-emoji">💆</span>
+        <span class="category-name">サロン・施設優待</span>
+      </a>
+      <a class="category-card" onclick="showCategory('gourmet')" href="#products">
+        <span class="category-emoji">🍽️</span>
+        <span class="category-name">グルメ・飲食優待</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PRODUCTS ===== -->
+<div id="products">
+
+  <!-- NEW ARRIVALS -->
+  <section class="product-section active" id="cat-new">
+    <div class="container">
+      <div class="product-section-header">
+        <h2>🆕 NEW ARRIVALS</h2>
+        <span class="product-count">毎週月曜更新</span>
+      </div>
+      <div class="product-grid">
+
+        <!-- 商品カード例1 -->
+        <div class="product-card">
+          <span class="product-badge">NEW</span>
+          <div class="product-img-placeholder">📦 商品画像</div>
+          <div class="product-body">
+            <p class="product-brand">NORMATEC</p>
+            <p class="product-name">Normatec 3 Legs リカバリーシステム</p>
+            <p class="product-price-regular">通常価格 ¥182,600</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@YOURLINEID" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <!-- 商品カード例2 -->
+        <div class="product-card">
+          <span class="product-badge">NEW</span>
+          <div class="product-img-placeholder">📦 商品画像</div>
+          <div class="product-body">
+            <p class="product-brand">VITAS</p>
+            <p class="product-name">ホエイプロテイン100 1kg ストロベリー</p>
+            <p class="product-price-regular">通常価格 ¥5,480</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@YOURLINEID" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <!-- 商品カード例3 -->
+        <div class="product-card">
+          <span class="product-badge">NEW</span>
+          <div class="product-img-placeholder">📦 商品画像</div>
+          <div class="product-body">
+            <p class="product-brand">DENBA HEALTH</p>
+            <p class="product-name">DENBA Health ハイグレードモデル</p>
+            <p class="product-price-regular">通常価格 ¥990,000</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@YOURLINEID" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <!-- 商品カード例4 -->
+        <div class="product-card">
+          <span class="product-badge">NEW</span>
+          <div class="product-img-placeholder">📦 商品画像</div>
+          <div class="product-body">
+            <p class="product-brand">LUCIER</p>
+            <p class="product-name">LUCIER ナイトレンズ RYAN BLACK</p>
+            <p class="product-price-regular">通常価格 ¥20,500〜</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@YOURLINEID" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- BEAUTY -->
+  <section class="product-section" id="cat-beauty">
+    <div class="container">
+      <div class="product-section-header">
+        <h2>💄 ビューティー・スキンケア</h2>
+        <span class="product-count">商品準備中</span>
+      </div>
+      <div class="product-grid">
+        <div class="product-card">
+          <div class="product-img-placeholder">📦 商品画像</div>
+          <div class="product-body">
+            <p class="product-brand">BEAUTY</p>
+            <p class="product-name">商品名をここに入力</p>
+            <p class="product-price-regular">通常価格 ¥00,000</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@YOURLINEID" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SPORTS -->
+  <section class="product-section" id="cat-sports">
+    <div class="container">
+      <div class="product-section-header">
+        <h2>💪 スポーツ・フィットネス</h2>
+        <span class="product-count">4件</span>
+      </div>
+      <div class="product-grid">
+
+        <div class="product-card">
+          <div class="product-img-placeholder">📦 商品画像</div>
+          <div class="product-body">
+            <p class="product-brand">NORMATEC</p>
+            <p class="product-name">Normatec 3 Legs リカバリーシステム</p>
+            <p class="product-price-regular">通常価格 ¥182,600</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@YOURLINEID" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-img-placeholder">📦 商品画像</div>
+          <div class="product-body">
+            <p class="product-brand">NORMATEC</p>
+            <p class="product-name">Normatec Premier Standard</p>
+            <p class="product-price-regular">通常価格 ¥222,200</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@YOURLINEID" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-img-placeholder">📦 商品画像</div>
+          <div class="product-body">
+            <p class="product-brand">GAME READY</p>
+            <p class="product-name">Game Ready GI2 リカバリーシステム（圧迫＋アイシング）</p>
+            <p class="product-price-regular">通常価格 ¥660,000</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@YOURLINEID" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-img-placeholder">📦 商品画像</div>
+          <div class="product-body">
+            <p class="product-brand">GAME READY</p>
+            <p class="product-name">Game Ready 部位別ラップ（膝・肩・腰など）</p>
+            <p class="product-price-regular">通常価格 ¥82,500〜</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@YOURLINEID" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- HEALTH -->
+  <section class="product-section" id="cat-health">
+    <div class="container">
+      <div class="product-section-header">
+        <h2>🏥 健康・ヘルスケア・サプリ</h2>
+        <span class="product-count">6件</span>
+      </div>
+      <div class="product-grid">
+
+        <div class="product-card">
+          <div class="product-img-placeholder">📦 商品画像</div>
+          <div class="product-body">
+            <p class="product-brand">DENBA HEALTH</p>
+            <p class="product-name">DENBA Health ハイグレードモデル</p>
+            <p class="product-price-regular">通常価格 ¥990,000</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@YOURLINEID" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-img-placeholder">📦 商品画像</div>
+          <div class="product-body">
+            <p class="product-brand">DENBA HEALTH</p>
+            <p class="product-name">DENBA Health スタンダードモデル</p>
+            <p class="product-price-regular">通常価格 ¥900,000</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@YOURLINEID" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-img-placeholder">📦 商品画像</div>
+          <div class="product-body">
+            <p class="product-brand">DENBA HEALTH</p>
+            <p class="product-name">DENBA Health チャージモデル</p>
+            <p class="product-price-regular">通常価格 ¥396,000</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@YOURLINEID" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-img-placeholder">📦 商品画像</div>
+          <div class="product-body">
+            <p class="product-brand">VITAS</p>
+            <p class="product-name">ホエイプロテイン100 1kg</p>
+            <p class="product-price-regular">通常価格 ¥5,480</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@YOURLINEID" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-img-placeholder">📦 商品画像</div>
+          <div class="product-body">
+            <p class="product-brand">VITAS</p>
+            <p class="product-name">VITA POWER マルチビタミン 120粒</p>
+            <p class="product-price-regular">通常価格 ¥2,480</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@YOURLINEID" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-img-placeholder">📦 商品画像</div>
+          <div class="product-body">
+            <p class="product-brand">LUCIER</p>
+            <p class="product-name">LUCIER ナイトレンズ（睡眠改善ブルーライトカット）</p>
+            <p class="product-price-regular">通常価格 ¥20,500〜</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@YOURLINEID" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FASHION -->
+  <section class="product-section" id="cat-fashion">
+    <div class="container">
+      <div class="product-section-header">
+        <h2>👗 ファッション</h2>
+        <span class="product-count">商品準備中</span>
+      </div>
+      <div class="product-grid">
+        <div class="product-card">
+          <div class="product-img-placeholder">📦 商品画像</div>
+          <div class="product-body">
+            <p class="product-brand">FASHION</p>
+            <p class="product-name">商品名をここに入力</p>
+            <p class="product-price-regular">通常価格 ¥00,000</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@YOURLINEID" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- JEWELRY -->
+  <section class="product-section" id="cat-jewelry">
+    <div class="container">
+      <div class="product-section-header">
+        <h2>💎 ジュエリー・アクセサリー・腕時計</h2>
+        <span class="product-count">商品準備中</span>
+      </div>
+      <div class="product-grid">
+        <div class="product-card">
+          <div class="product-img-placeholder">📦 商品画像</div>
+          <div class="product-body">
+            <p class="product-brand">JEWELRY</p>
+            <p class="product-name">商品名をここに入力</p>
+            <p class="product-price-regular">通常価格 ¥00,000</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@YOURLINEID" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TECH -->
+  <section class="product-section" id="cat-tech">
+    <div class="container">
+      <div class="product-section-header">
+        <h2>📱 スマホ・タブレット・オーディオ</h2>
+        <span class="product-count">商品準備中</span>
+      </div>
+      <div class="product-grid">
+        <div class="product-card">
+          <div class="product-img-placeholder">📦 商品画像</div>
+          <div class="product-body">
+            <p class="product-brand">TECH</p>
+            <p class="product-name">商品名をここに入力</p>
+            <p class="product-price-regular">通常価格 ¥00,000</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@YOURLINEID" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTERIOR -->
+  <section class="product-section" id="cat-interior">
+    <div class="container">
+      <div class="product-section-header">
+        <h2>🛋️ インテリア・家具・家電</h2>
+        <span class="product-count">商品準備中</span>
+      </div>
+      <div class="product-grid">
+        <div class="product-card">
+          <div class="product-img-placeholder">📦 商品画像</div>
+          <div class="product-body">
+            <p class="product-brand">INTERIOR</p>
+            <p class="product-name">商品名をここに入力</p>
+            <p class="product-price-regular">通常価格 ¥00,000</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@YOURLINEID" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SALON -->
+  <section class="product-section" id="cat-salon">
+    <div class="container">
+      <div class="product-section-header">
+        <h2>💆 サロン・施設優待</h2>
+        <span class="product-count">商品準備中</span>
+      </div>
+      <div class="product-grid">
+        <div class="product-card">
+          <div class="product-img-placeholder">📦 施設画像</div>
+          <div class="product-body">
+            <p class="product-brand">SALON</p>
+            <p class="product-name">施設名をここに入力</p>
+            <p class="product-price-regular">通常価格 ¥00,000/月</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@YOURLINEID" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GOURMET -->
+  <section class="product-section" id="cat-gourmet">
+    <div class="container">
+      <div class="product-section-header">
+        <h2>🍽️ グルメ・飲食優待</h2>
+        <span class="product-count">商品準備中</span>
+      </div>
+      <div class="product-grid">
+        <div class="product-card">
+          <div class="product-img-placeholder">📦 店舗画像</div>
+          <div class="product-body">
+            <p class="product-brand">GOURMET</p>
+            <p class="product-name">店舗名をここに入力</p>
+            <p class="product-price-regular">通常価格 ¥00,000</p>
+            <p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+            <a href="https://line.me/R/ti/p/@YOURLINEID" class="product-btn">💬 LINEで問い合わせ▶</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /products -->
+
+<!-- ===== LINE BANNER ===== -->
+<div class="line-banner">
+  <p>🔔 気になる商品・優待はLINEからお気軽にお問い合わせください</p>
+  <a href="https://line.me/R/ti/p/@YOURLINEID" class="line-banner-btn">
+    💬 LINEで問い合わせる▶
+  </a>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-logo">ATHLETE SELECT</div>
+  <p>© 2025 ATHLETE SELECT by Yuki Abe. All rights reserved.</p>
+</footer>
+
+<!-- ===== JAVASCRIPT ===== -->
+<script>
+  function showCategory(cat) {
+    // 全カテゴリー非表示
+    document.querySelectorAll('.product-section').forEach(el => {
+      el.classList.remove('active');
+    });
+    // 全ボタンのactiveを外す
+    document.querySelectorAll('.category-card').forEach(el => {
+      el.classList.remove('active');
+    });
+    // 選択カテゴリーを表示
+    document.getElementById('cat-' + cat).classList.add('active');
+    // クリックしたボタンをactive
+    event.currentTarget.classList.add('active');
+  }
+</script>
+
+</body>
+</html>
