@@ -1,0 +1,1842 @@
+<!DOCTYPE html>
+
+<!--
+  =====================================================
+  Member's Offer Market - メインページ
+  =====================================================
+  【このファイルの構成】
+  1. <head>    : ページの設定・デザイン（CSS）
+  2. <body>    : 実際に画面に表示される内容（HTML）
+  3. <script>  : ボタンクリック時の動き（JavaScript）
+
+  【編集するときのポイント】
+  - 商品名・価格 → <body> の中の product-name / product-price-regular を探す
+  - 色を変えたい → <head> の :root {} の中の変数を変える
+  - LINE ID変更 → @110gnfzj を自分のIDに全て置換（Ctrl+H）
+  =====================================================
+-->
+<html lang="ja">
+<head>
+<!-- ブラウザに「文字コードはUTF-8（日本語対応）」と伝える設定 -->
+<meta charset="utf-8"/>
+<!-- スマホでも正しいサイズで表示するための設定 -->
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<!-- ブラウザのタブに表示されるページタイトル ★変更OK★ -->
+<title>Member's Offer Market</title>
+<!-- Googleフォントの読み込み（日本語：Noto Sans JP、英語：Montserrat） -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&amp;family=Montserrat:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<style>
+    /* =======================================================
+       【リセット・ベース設定】
+       すべての要素の余白をゼロにリセットし、
+       ブラウザごとのデザインのズレをなくす基本設定
+    ======================================================= */
+    *, *::before, *::after {
+      box-sizing: border-box; /* 枠線込みでサイズ計算する設定 */
+      margin: 0;              /* 外側余白をゼロに */
+      padding: 0;             /* 内側余白をゼロに */
+    }
+    html {
+      scroll-behavior: smooth; /* リンクをクリックしたときにスムーズにスクロール */
+    }
+    body {
+      font-family: 'Noto Sans JP', sans-serif; /* サイト全体のフォント（日本語） */
+      background: #FFFFFF;                     /* 背景色：白 */
+      color: #2C2C2C;                          /* 文字色：ほぼ黒 */
+      line-height: 1.6;                        /* 行間（読みやすい間隔） */
+    }
+    a {
+      text-decoration: none; /* リンクの下線を消す */
+      color: inherit;        /* リンクの色を親要素と同じにする */
+    }
+    img {
+      max-width: 100%; /* 画像がはみ出さないよう最大幅を制限 */
+      display: block;  /* 画像の下に余計な隙間が出ないようにする */
+    }
+
+
+    /* =======================================================
+       【カラー変数】
+       サイト全体で使う色をここで一括管理している
+       ★色を変えたいときはここだけ変えればOK★
+
+       --gold        : シャンパンゴールド（メインカラー）
+       --black       : 黒（ヘッダー・フッター）
+       --dark        : 濃いグレー（本文テキスト）
+       --gray        : グレー（サブテキスト・価格など）
+       --light-gray  : 薄いグレー（商品背景）
+       --border      : ボタン枠線のデフォルト色（薄いグレー）
+       --border-active: ボタン枠線のホバー・選択時の色（ゴールド）
+       --white       : 白（背景・ボタン内部）
+       --line-green  : LINEボタンの緑色
+    ======================================================= */
+    :root {
+      --gold: #D4AF37;
+      --black: #1A1A1A;
+      --dark: #2C2C2C;
+      --gray: #888888;
+      --light-gray: #F8F8F8;
+      --border: #E0E0E0;
+      --border-active: #D4AF37;
+      --white: #FFFFFF;
+      --line-green: #06C755;
+    }
+
+
+    /* =======================================================
+       【ヘッダー全体】
+       画面上部のゴールドバー部分
+       position: sticky で画面をスクロールしても常に上に固定される
+
+       ★変更できる項目★
+       - height     : ヘッダーの高さ（px単位）
+       - background : 背景色
+       - padding    : 左右の余白（数値を大きくすると余白が増える）
+    ======================================================= */
+    header {
+      position: sticky;      /* スクロールしても上に固定 */
+      top: 0;                /* 画面の一番上に固定 */
+      z-index: 1000;         /* 他の要素より手前に表示（重なり順） */
+      background: var(--gold); /* 背景色：シャンパンゴールド ★変更OK★ */
+      height: 52px;          /* ヘッダーの高さ ★変更OK★ */
+      display: flex;
+      align-items: center;   /* 縦方向：中央揃え */
+      justify-content: space-between; /* 左右に振り分け */
+      padding: 0 40px;       /* 左右の余白 ★変更OK★ */
+      box-shadow: 0 1px 6px rgba(0,0,0,0.12); /* 下に薄い影 */
+    }
+
+    /* -------------------------------------------------
+       【ヘッダー内：サイト名「Member's Offer Market」】
+       左側に表示される大きなテキスト部分
+
+       ★変更できる項目★
+       - font-size    : 文字の大きさ（例：17px → 20pxで大きくなる）
+       - font-weight  : 文字の太さ（300=細い / 500=普通 / 700=太い）
+       - letter-spacing: 文字間隔
+    ------------------------------------------------- */
+    .header-logo {
+      font-family: 'Montserrat', sans-serif; /* 英字フォント */
+      font-weight: 500;      /* 文字の太さ：普通 ★変更OK★ */
+      font-size: 17px;       /* 文字サイズ ★変更OK★ */
+      color: var(--white);   /* 文字色：白 */
+      letter-spacing: 1.5px; /* 文字間隔 ★変更OK★ */
+    }
+
+    /* -------------------------------------------------
+       【ヘッダー内：サブタイトル「Supported by Wealth Strategy」】
+       サイト名の直下に極小で表示されるテキスト
+
+       ★変更できる項目★
+       - font-size  : 文字サイズ（8px=極小 / 10px=小 / 12px=普通）
+       - color      : 文字色（現在は薄いグレー固定）
+       - font-weight: 太さ（300=細い）
+       - letter-spacing: 文字間隔
+    ------------------------------------------------- */
+    .header-logo span {
+      font-size: 8px;                        /* 極小サイズ ★変更OK★ */
+      display: block;                        /* 改行して下に表示 */
+      letter-spacing: 1.5px;                 /* 文字間隔 ★変更OK★ */
+      font-weight: 300;                      /* 細いフォント ★変更OK★ */
+      color: rgba(220, 220, 220, 0.85);      /* 薄いグレー ★変更OK★ */
+      opacity: 1;
+      margin-top: 2px;                       /* サイト名との上下間隔 */
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    /* -------------------------------------------------
+       【ヘッダー内：右側ナビゲーションメニュー】
+       「カテゴリー」「新着」「LINEで問い合わせ」ボタンが並ぶ部分
+    ------------------------------------------------- */
+    .header-nav {
+      display: flex;   /* 横並びにする */
+      gap: 24px;       /* ボタン間の隙間 ★変更OK★ */
+      align-items: center;
+    }
+    .header-nav a {
+      color: var(--white);  /* リンク文字色：白 */
+      font-size: 12px;      /* 文字サイズ ★変更OK★ */
+      letter-spacing: 0.5px;
+      opacity: 0.85;        /* 少し透明にして上品に */
+      transition: opacity 0.2s; /* ホバー時にふわっと変化 */
+      font-weight: 300;
+    }
+    .header-nav a:hover { opacity: 1; } /* マウスが乗ったら不透明に */
+
+    /* -------------------------------------------------
+       【ヘッダー内：LINEお問い合わせボタン（緑色の丸ボタン）】
+
+       ★変更できる項目★
+       - background : ボタン色（現在はLINEグリーン）
+       - padding    : ボタンの内側余白（大きくするとボタンが大きくなる）
+       - border-radius: 角の丸み（20px=丸 / 0px=四角）
+    ------------------------------------------------- */
+    .header-line-btn {
+      background: var(--line-green); /* ボタン背景色：LINEグリーン ★変更OK★ */
+      color: var(--white) !important;
+      padding: 6px 16px;             /* ボタンの余白（上下 左右） ★変更OK★ */
+      border-radius: 20px;           /* 角の丸み ★変更OK★ */
+      font-weight: 500 !important;
+      opacity: 1 !important;
+      font-size: 12px !important;
+    }
+
+
+    /* =======================================================
+       【メインコンテナ】
+       ページ全体のコンテンツ幅を制限して中央揃えにする箱
+       max-width を変えるとコンテンツの最大幅が変わる
+
+       ★変更できる項目★
+       - max-width : コンテンツ全体の最大幅（px）
+       - padding   : 左右の余白（画面端からの距離）
+    ======================================================= */
+    .container {
+      max-width: 1400px;  /* コンテンツの最大幅 ★変更OK★ */
+      margin: 0 auto;     /* 左右自動余白で中央揃え */
+      padding: 0 48px;    /* 左右の余白 ★変更OK★ */
+    }
+
+
+    /* =======================================================
+       【セクションタイトル】
+       「CATEGORIES」「カテゴリーから探す」が表示される見出し部分
+
+       ★変更できる項目★
+       - padding : 上下余白（カテゴリーグリッドとの距離）
+    ======================================================= */
+    .section-title {
+      text-align: center;      /* 中央揃え */
+      padding: 48px 0 24px;   /* 上48px・下24pxの余白 ★変更OK★ */
+    }
+    /* 「CATEGORIES」の小さい英字見出し */
+    .section-title h2 {
+      font-size: 10px;          /* 文字サイズ（極小） ★変更OK★ */
+      letter-spacing: 5px;      /* 文字間隔（広め） ★変更OK★ */
+      color: var(--gold);       /* 文字色：ゴールド */
+      font-family: 'Montserrat', sans-serif;
+      margin-bottom: 6px;
+      font-weight: 400;
+    }
+    /* 「カテゴリーから探す」の日本語見出し */
+    .section-title h3 {
+      font-size: clamp(15px, 1.8vw, 20px); /* 画面幅に合わせて自動調整 */
+      font-weight: 400;         /* 文字の太さ ★変更OK★ */
+      color: var(--dark);       /* 文字色：ほぼ黒 */
+      letter-spacing: 1px;
+    }
+
+
+    /* =======================================================
+       【カテゴリーエリア全体の背景・余白】
+       12個のカテゴリーボタンが並ぶセクション全体の設定
+
+       ★変更できる項目★
+       - padding-bottom : グリッドの下余白
+    ======================================================= */
+    .category-section {
+      background: var(--white); /* 背景色：白 */
+      padding-bottom: 56px;     /* 下余白 ★変更OK★ */
+    }
+
+    /* -------------------------------------------------
+       【カテゴリーグリッド（PC：6列×2行）】
+       12個のボタンを並べるグリッドレイアウト
+
+       ★列数を変えたいとき★
+       repeat(6, 1fr) の数字を変える
+       例: repeat(4, 1fr) → 4列になる
+       例: repeat(3, 1fr) → 3列になる
+
+       ★変更できる項目★
+       - grid-template-columns : 列数
+       - gap : ボタン間の隙間（大きくするとスカスカ、小さくすると密）
+    ------------------------------------------------- */
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr); /* PC：6列 ★変更OK★ */
+      gap: 12px;  /* ボタン間の隙間 ★変更OK★ */
+    }
+
+    /* -------------------------------------------------
+       【カテゴリーボタン（通常状態）】
+       各カテゴリーの四角いボタン
+
+       ★変更できる項目★
+       - border     : 枠線（1px=細い / 2px=やや太い）
+       - border-radius : 角の丸み（0=直角 / 8px=少し丸 / 50%=円）
+       - padding    : ボタン内側の余白（大きくするとボタンが大きくなる）
+    ------------------------------------------------- */
+    .category-card {
+      border: 1px solid var(--border); /* 枠線：薄いグレー（通常時） */
+      border-radius: 0;                /* 角：直角 ★変更OK★ */
+      padding: 20px 8px;               /* 内側余白（上下 左右） ★変更OK★ */
+      text-align: center;
+      cursor: pointer;                 /* マウスをのせると矢印→手に変わる */
+      transition: border-color 0.2s, box-shadow 0.2s; /* 変化をなめらかに */
+      background: var(--white);        /* ボタン背景色：白 */
+      display: block;
+    }
+    /* マウスをのせたとき（ホバー状態） */
+    .category-card:hover {
+      border-color: var(--border-active); /* 枠線がゴールドに変化 */
+      box-shadow: 0 2px 10px rgba(212,175,55,0.12); /* 薄い影 */
+    }
+    /* クリックして選択中のとき（アクティブ状態） */
+    .category-card.active {
+      border-color: var(--border-active); /* 枠線：ゴールド */
+      background: #FDFBF2;                /* 背景：ごく薄いゴールド */
+    }
+
+    /* -------------------------------------------------
+       【カテゴリーボタン内：絵文字アイコン】
+
+       ★変更できる項目★
+       - font-size    : 絵文字サイズ（大きくしたければ増やす）
+       - margin-bottom: 絵文字とテキストの間隔
+    ------------------------------------------------- */
+    .category-emoji {
+      font-size: 20px;      /* 絵文字サイズ ★変更OK★ */
+      margin-bottom: 7px;   /* 絵文字とテキストの間隔 ★変更OK★ */
+      display: block;
+    }
+
+    /* -------------------------------------------------
+       【カテゴリーボタン内：テキスト（カテゴリー名）】
+
+       ★変更できる項目★
+       - font-size  : 文字サイズ（10px=極小 / 12px=小 / 14px=普通）
+       - font-weight: 太さ（300=細い / 400=普通 / 700=太い）
+       - color      : 文字色
+    ------------------------------------------------- */
+    .category-name {
+      font-size: 10px;      /* 文字サイズ（極小） ★変更OK★ */
+      font-weight: 300;     /* 細いフォント ★変更OK★ */
+      color: var(--dark);   /* 文字色：ほぼ黒 */
+      letter-spacing: 0.2px;
+      line-height: 1.4;     /* 行間 */
+    }
+
+
+    /* =======================================================
+       【商品セクション全体】
+       カテゴリーボタンをクリックすると表示される商品一覧エリア
+       display: none で最初は非表示になっている
+       クリックされたカテゴリーだけ display: block で表示される
+    ======================================================= */
+    .product-section {
+      background: var(--light-gray); /* 背景色：薄いグレー */
+      padding: 48px 0;               /* 上下余白 ★変更OK★ */
+      display: none;                 /* ← 最初は非表示（触らない） */
+    }
+    /* JavaScript でクリックされると .active が付いて表示される */
+    .product-section.active { display: block; }
+
+    /* -------------------------------------------------
+       【商品セクションのタイトル行】
+       「💪🏻 スポーツ・フィットネス」と件数バッジが横並びになる部分
+    ------------------------------------------------- */
+    .product-section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;           /* タイトルとバッジの間隔 */
+      margin-bottom: 28px; /* タイトルと商品グリッドの間隔 ★変更OK★ */
+    }
+    /* セクションタイトルの文字設定 */
+    .product-section-header h2 {
+      font-size: clamp(15px, 1.8vw, 20px); /* 画面幅で自動調整 */
+      font-weight: 400;
+      color: var(--dark);
+    }
+
+    /* -------------------------------------------------
+       【商品件数バッジ】
+       「4件」「商品準備中」などを丸ボタン風に表示するバッジ
+    ------------------------------------------------- */
+    .product-count {
+      font-size: 11px;
+      color: var(--gray);
+      background: var(--white);
+      border: 1px solid var(--border);
+      padding: 3px 11px;
+      border-radius: 20px; /* 丸みを帯びたバッジ形 */
+    }
+
+    /* -------------------------------------------------
+       【商品グリッド】
+       商品カードを横に並べるグリッド
+       minmax(230px, 1fr) により画面幅に応じて自動で列数が変わる
+       例：PC幅では4〜5列、スマホでは2列
+
+       ★変更できる項目★
+       - minmax(230px, ...) : カード1枚の最小幅（小さくすると列が増える）
+       - gap                : カード間の隙間
+    ------------------------------------------------- */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); /* 自動列数 ★変更OK★ */
+      gap: 18px; /* カード間の隙間 ★変更OK★ */
+    }
+
+
+    /* =======================================================
+       【商品カード全体】
+       1つの商品を囲む白い箱（枠線・直角・ホバー時に浮き上がる）
+
+       ★変更できる項目★
+       - border       : 枠線の太さと色
+       - border-radius: 角の丸み（0=直角 / 8px=少し丸）
+    ======================================================= */
+    .product-card {
+      background: var(--white);        /* カード背景：白 */
+      border: 1px solid var(--border); /* 枠線：薄いグレー */
+      border-radius: 0;                /* 角：直角 ★変更OK★ */
+      overflow: hidden;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+      position: relative;
+    }
+    /* マウスをのせたときのカードの変化 */
+    .product-card:hover {
+      border-color: var(--border-active);                  /* 枠線がゴールドに */
+      box-shadow: 0 4px 20px rgba(212,175,55,0.13); /* 薄い影 */
+      transform: translateY(-2px);                  /* 2px上に浮き上がる */
+    }
+
+    /* -------------------------------------------------
+       【商品カード：NEWバッジ】
+       カード左上に表示されるゴールドの「NEW」バッジ
+
+       ★変更できる項目★
+       - background : バッジの色（現在ゴールド）
+       - font-size  : バッジ内の文字サイズ
+       - padding    : バッジの余白（大きくするとバッジが大きくなる）
+    ------------------------------------------------- */
+    .product-badge {
+      position: absolute; /* カード内の絶対位置に固定 */
+      top: 10px;          /* 上からの距離 */
+      left: 10px;         /* 左からの距離 */
+      background: var(--gold); /* バッジ色：ゴールド ★変更OK★ */
+      color: var(--white);
+      font-size: 10px;    /* 文字サイズ ★変更OK★ */
+      font-weight: 600;
+      padding: 3px 8px;   /* バッジの余白 ★変更OK★ */
+      border-radius: 2px;
+      font-family: 'Montserrat', sans-serif;
+      z-index: 1;
+    }
+
+    /* -------------------------------------------------
+       【商品カード：商品画像エリア】
+       ★商品画像を入れるときはここを <img> タグに差し替える★
+
+       プレースホルダーを実際の画像に変える方法：
+       【変更前】<div class="product-img-placeholder">📦 商品画像</div>
+       【変更後】<img class="product-img" src="https://画像のURL">
+
+       ★変更できる項目★
+       - height : 画像エリアの高さ（px）
+    ------------------------------------------------- */
+    .product-img {
+      width: 100%;
+      height: 190px;              /* 画像エリアの高さ ★変更OK★ */
+      object-fit: contain;        /* 画像をはみ出さず収める */
+      background: var(--light-gray);
+      padding: 14px;
+    }
+    /* 画像が未設定のときに表示されるグレーのプレースホルダー */
+    .product-img-placeholder {
+      width: 100%;
+      height: 190px;              /* プレースホルダーの高さ（product-imgと合わせる） */
+      background: linear-gradient(135deg, #F2F2F2, #EAEAEA);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gray);
+      font-size: 12px;
+    }
+
+    /* 商品情報（ブランド名・商品名・価格・ボタン）が入る内側のパディング */
+    .product-body { padding: 14px; }
+
+    /* -------------------------------------------------
+       【商品カード：ブランド名】
+       例：「NORMATEC」「VITAS」など小さいゴールド文字
+
+       ★変更できる項目★
+       - font-size : 文字サイズ
+       - color     : 文字色（現在ゴールド）
+    ------------------------------------------------- */
+    .product-brand {
+      font-size: 10px;      /* 小さい文字 ★変更OK★ */
+      color: var(--gold);   /* ゴールド文字 ★変更OK★ */
+      font-family: 'Montserrat', sans-serif;
+      letter-spacing: 1.5px;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+
+    /* -------------------------------------------------
+       【商品カード：商品名】
+       例：「Normatec 3 Legs リカバリーシステム」
+
+       ★変更できる項目★
+       - font-size : 文字サイズ（大きくすると目立つ）
+       - font-weight: 太さ
+    ------------------------------------------------- */
+    .product-name {
+      font-size: 13px;      /* 文字サイズ ★変更OK★ */
+      font-weight: 400;     /* 普通の太さ ★変更OK★ */
+      color: var(--dark);
+      margin-bottom: 9px;
+      line-height: 1.5;
+    }
+
+    /* -------------------------------------------------
+       【商品カード：通常価格（取り消し線）】
+       例：「通常価格 ¥182,600」グレーで取り消し線付き
+
+       ★変更できる項目★
+       - color : 文字色（現在グレー）
+    ------------------------------------------------- */
+    .product-price-regular {
+      font-size: 11px;
+      color: var(--gray);            /* グレー文字 ★変更OK★ */
+      text-decoration: line-through; /* 取り消し線 */
+      margin-bottom: 2px;
+    }
+
+    /* -------------------------------------------------
+       【商品カード：会員優待価格】
+       例：「会員優待価格・詳細はお問い合わせ」ゴールド文字
+
+       ★変更できる項目★
+       - color : 文字色（現在ゴールド）
+    ------------------------------------------------- */
+    .product-price-member {
+      font-size: 11px;
+      color: var(--gold);   /* ゴールド文字 ★変更OK★ */
+      font-weight: 500;
+      margin-bottom: 11px;
+    }
+
+    /* -------------------------------------------------
+       【商品カード：LINEお問い合わせボタン】
+       ★★ href="https://line.me/R/ti/p/@110gnfzj" の
+          @110gnfzj を自分のLINE IDに変えてください ★★
+
+       ★変更できる項目★
+       - background : ボタン色（現在黒）
+       - font-size  : ボタン内の文字サイズ
+       - padding    : ボタンの上下余白（大きくするとボタンが高くなる）
+       - border-radius: 角の丸み（2px=ほぼ直角 / 20px=丸）
+    ------------------------------------------------- */
+    .product-btn {
+      display: block;
+      width: 100%;
+      background: var(--black); /* ボタン背景色：黒 ★変更OK★ */
+      color: var(--white);
+      text-align: center;
+      padding: 9px;             /* ボタンの余白 ★変更OK★ */
+      border-radius: 2px;       /* 角の丸み ★変更OK★ */
+      font-size: 12px;          /* 文字サイズ ★変更OK★ */
+      font-weight: 300;
+      transition: background 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+    .product-btn:hover { background: #333; } /* ホバー時：少し明るい黒 */
+
+
+    /* =======================================================
+       【LINEバナー】
+       商品一覧の下に表示される黒い横断幕
+       「気になる商品・優待はLINEから〜」の部分
+
+       ★変更できる項目★
+       - background : バナー背景色（現在黒）
+       - padding    : バナーの内側余白
+    ======================================================= */
+    .line-banner {
+      background: var(--black); /* 背景色：黒 ★変更OK★ */
+      padding: 28px 40px;       /* 余白 ★変更OK★ */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    /* バナー内のテキスト */
+    .line-banner p {
+      color: var(--white);
+      font-size: 13px;   /* 文字サイズ ★変更OK★ */
+      letter-spacing: 0.5px;
+      font-weight: 300;
+    }
+    /* バナー内のLINEボタン */
+    .line-banner-btn {
+      background: var(--line-green); /* ボタン色：LINEグリーン ★変更OK★ */
+      color: var(--white);
+      padding: 10px 28px;
+      border-radius: 28px;           /* 丸みボタン */
+      font-size: 13px;
+      font-weight: 400;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: opacity 0.2s;
+    }
+    .line-banner-btn:hover { opacity: 0.85; }
+
+
+    /* =======================================================
+       【フッター全体】
+       ページ最下部の黒いエリア
+
+       ★変更できる項目★
+       - background : 背景色（現在黒）
+       - padding    : 上下左右の余白
+    ======================================================= */
+    footer {
+      background: var(--black); /* 背景色：黒 ★変更OK★ */
+      border-top: 1px solid #2a2a2a;
+      padding: 28px 40px;       /* 余白 ★変更OK★ */
+      text-align: center;
+    }
+
+    /* -------------------------------------------------
+       【フッター内：サイト名「Member's Offer Market」】
+
+       ★変更できる項目★
+       - color       : 文字色（現在ゴールド）
+       - font-size   : 文字サイズ
+       - letter-spacing: 文字間隔
+    ------------------------------------------------- */
+    .footer-logo {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;      /* 文字サイズ ★変更OK★ */
+      font-weight: 400;
+      color: var(--gold);   /* 文字色：ゴールド ★変更OK★ */
+      letter-spacing: 2px;
+      margin-bottom: 6px;
+    }
+
+    /* -------------------------------------------------
+       【フッター内：クレジット「Supported by PHOEBUS（フォーブス）」】
+
+       ★変更できる項目★
+       - color     : 文字色（現在薄いグレー #888）
+         例: #aaaaaa にするともっと薄くなる
+             #666666 にすると少し濃くなる
+       - font-size : 文字サイズ
+    ------------------------------------------------- */
+    footer p {
+      color: #888;      /* 薄いグレー ★変更OK（#999でもっと薄く等）★ */
+      font-size: 10px;  /* 文字サイズ ★変更OK★ */
+      letter-spacing: 0.5px;
+      font-weight: 300;
+    }
+
+
+    /* =======================================================
+       【レスポンシブ対応：タブレット（幅1100px以下）】
+       タブレットサイズでは6列→4列に切り替える
+    ======================================================= */
+    @media (max-width: 1100px) {
+      .category-grid { grid-template-columns: repeat(4, 1fr); } /* 4列に変更 */
+    }
+
+    /* =======================================================
+       【レスポンシブ対応：スマートフォン（幅768px以下）】
+       スマホではレイアウトを縦向きに最適化する
+       ・ヘッダーのナビを非表示（display:none）
+       ・カテゴリーを2列表示に変更
+       ・商品を2列表示に変更
+    ======================================================= */
+    @media (max-width: 768px) {
+      header { padding: 0 18px; height: 48px; } /* ヘッダーを少し小さく */
+      .header-nav { display: none; }            /* ナビを非表示（スマホ不要） */
+      .header-logo { font-size: 14px; }         /* ロゴ文字を小さく */
+      .container { padding: 0 14px; }           /* コンテナ余白を縮小 */
+      .category-grid { grid-template-columns: repeat(2, 1fr); gap: 9px; } /* 2列 */
+      .category-card { padding: 16px 6px; }
+      .category-emoji { font-size: 17px; }
+      .product-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; } /* 2列 */
+      .product-img, .product-img-placeholder { height: 130px; }
+      .line-banner { padding: 18px 14px; gap: 12px; }
+      footer { padding: 20px 14px; }
+      .section-title { padding: 32px 0 18px; }
+    }
+
+    /* =======================================================
+       【レスポンシブ対応：小さいスマートフォン（幅480px以下）】
+    ======================================================= */
+    @media (max-width: 480px) {
+      .product-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .product-body { padding: 10px; }
+      .product-name { font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+<!-- =======================================================
+     【ヘッダー】
+     画面上部の金色のバー
+     ・左：サイト名 + サブタイトル
+     ・右：ナビゲーション + LINEボタン
+     ★ @110gnfzj を自分のLINE IDに変えてください ★
+======================================================= -->
+<header>
+<div class="header-logo">
+<!-- ★ サイト名を変えたい場合はここを編集 ★ -->
+    Member's Offer Market
+    <!-- ★ サブタイトルを変えたい場合はここを編集 ★ -->
+<span>Supported by Wealth Strategy</span>
+</div>
+<nav class="header-nav">
+<a href="#categories">カテゴリー</a>
+<a href="#products">新着</a>
+<!-- ★★ @110gnfzj を自分のLINE IDに変更してください ★★ -->
+<a class="header-line-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ</a>
+</nav>
+</header>
+<!-- =======================================================
+     【カテゴリーセクション】
+     12個のカテゴリーボタンが並ぶエリア
+     ・onclick="showCategory('キー')" のキーで商品セクションと紐づく
+     ・href="#products" でクリック時に商品エリアへスクロール
+======================================================= -->
+<section class="category-section" id="categories">
+<div class="container">
+<div class="section-title">
+<!-- 小さい英語見出し -->
+<h2>CATEGORIES</h2>
+<!-- 日本語見出し ★変更OK★ -->
+<h3>カテゴリーから探す</h3>
+</div>
+<div class="category-grid">
+<!-- ① New Arrivals ---------------------------------------- -->
+<!-- onclick のキー 'new' → id="cat-new" の商品セクションを表示 -->
+<a class="category-card active" href="javascript:void(0)" onclick="showCategory('new', this); return false;">
+<span class="category-emoji">🆕</span>
+<span class="category-name">New Arrivals</span>
+</a>
+<!-- ② ビューティ・スキンケア -------------------------------- -->
+<a class="category-card" href="javascript:void(0)" onclick="showCategory('beauty', this); return false;">
+<span class="category-emoji">💄</span>
+<span class="category-name">ビューティ・スキンケア</span>
+</a>
+<!-- ③ スポーツ・フィットネス -------------------------------- -->
+<a class="category-card" href="javascript:void(0)" onclick="showCategory('sports', this); return false;">
+<span class="category-emoji">💪🏻</span>
+<span class="category-name">スポーツ・フィットネス</span>
+</a>
+<!-- ④ 健康・ヘルスケア・サプリ ------------------------------ -->
+<a class="category-card" href="javascript:void(0)" onclick="showCategory('health', this); return false;">
+<span class="category-emoji">💊</span>
+<span class="category-name">健康・ヘルスケア・サプリ</span>
+</a>
+<!-- ⑤ ファッション ---------------------------------------- -->
+<a class="category-card" href="javascript:void(0)" onclick="showCategory('fashion', this); return false;">
+<span class="category-emoji">👗</span>
+<span class="category-name">ファッション</span>
+</a>
+<!-- ⑥ ジュエリー・アクセサリー ------------------------------ -->
+<a class="category-card" href="javascript:void(0)" onclick="showCategory('jewelry', this); return false;">
+<span class="category-emoji">💎</span>
+<span class="category-name">ジュエリー・アクセサリー</span>
+</a>
+<!-- ⑦ スマホ・タブレット・オーディオ ------------------------ -->
+<a class="category-card" href="javascript:void(0)" onclick="showCategory('tech', this); return false;">
+<span class="category-emoji">📱</span>
+<span class="category-name">スマホ・タブレット・オーディオ</span>
+</a>
+<!-- ⑧ インテリア・家具・家電 -------------------------------- -->
+<a class="category-card" href="javascript:void(0)" onclick="showCategory('interior', this); return false;">
+<span class="category-emoji">🛋️</span>
+<span class="category-name">インテリア・家具・家電</span>
+</a>
+<!-- ⑨ 美容施設優待 ---------------------------------------- -->
+<a class="category-card" href="javascript:void(0)" onclick="showCategory('beautysalon', this); return false;">
+<span class="category-emoji">💆</span>
+<span class="category-name">美容施設優待</span>
+</a>
+<!-- ⑩ 飲食優待 -------------------------------------------- -->
+<a class="category-card" href="javascript:void(0)" onclick="showCategory('dining', this); return false;">
+<span class="category-emoji">🍴</span>
+<span class="category-name">飲食優待</span>
+</a>
+<!-- ⑪ 体験・レジャー優待 ------------------------------------ -->
+<a class="category-card" href="javascript:void(0)" onclick="showCategory('leisure', this); return false;">
+<span class="category-emoji">🎫</span>
+<span class="category-name">体験・レジャー優待</span>
+</a>
+<!-- ⑫ 特別オファー ---------------------------------------- -->
+<a class="category-card" href="javascript:void(0)" onclick="showCategory('special', this); return false;">
+<span class="category-emoji">⭐️</span>
+<span class="category-name">特別オファー</span>
+</a>
+</div>
+</div>
+</section>
+<!-- =======================================================
+     【商品セクション群】
+     カテゴリーボタンをクリックすると対応するセクションが表示される
+     各セクションのid="cat-キー名" がカテゴリーボタンのキーと対応
+
+     【商品カードの編集方法】
+     ① 商品名変更  → <p class="product-name"> のテキストを変える
+     ② 価格変更    → <p class="product-price-regular"> のテキストを変える
+     ③ 画像差し替え → <div class="product-img-placeholder"> を
+                       <img class="product-img" src="画像URL"> に変える
+     ④ ブランド変更 → <p class="product-brand"> のテキストを変える
+     ⑤ LINE ID変更 → href の @110gnfzj を自分のIDに変える
+======================================================= -->
+<div id="products">
+<!-- =====================================================
+       ① NEW ARRIVALS（新着商品）
+       カテゴリーボタン①とid="cat-new"で紐づいている
+       最初から active クラスが付いているので最初から表示される
+  ===================================================== -->
+<section class="product-section active" id="cat-new">
+<div class="container">
+<div class="product-section-header">
+<!-- ★ セクションタイトルを変えたい場合はここを編集 ★ -->
+<h2>🆕 New Arrivals</h2>
+<!-- ★ 件数バッジのテキスト ★ -->
+<span class="product-count">毎週月曜更新</span>
+</div>
+<div class="product-grid">
+<!-- 【商品カード1】
+             product-img-placeholder → 画像が入ったら <img> タグに差し替え
+             product-brand   → ブランド名
+             product-name    → 商品名
+             product-price-regular → 通常価格（取り消し線付き）
+             product-price-member  → 会員向け表示テキスト
+             href の @110gnfzj   → 自分のLINE IDに変更 -->
+<!-- 【商品カード2】 -->
+<!-- 【商品カード3】 -->
+<div class="product-card">
+<span class="product-badge">NEW</span>
+<img alt="DENBA Health ハイグレード" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=1V5U3kJ2PhFEiGyU20iMKIpVhCE28d8RRtAXMCIkzKjrqhYMTqMIC6GZOcE20efo9CZ%2F8UwCIuANE4ZRNewMsi4PMz79ZDShO8WZMSs0%2FtxJtAuS1Q%3D%3D&amp;u2=wcS%2BkESiuFyGoXD0&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">DENBA</p>
+<p class="product-name">DENBA Health ハイグレード</p>
+<p class="product-price-regular">通常価格 ¥900,000</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- 【商品カード4】 -->
+<!-- ReFa BEAUTECH DRYER BX W（NEW） -->
+<div class="product-card">
+<span class="product-badge">NEW</span>
+<img alt="ReFa BEAUTECH DRYER BX W" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=9wzdwplU59OuFuVdSjItYB2fYqCAYBITtpCZ3laT1BzPHPsm66bhRe0u7NsPXZcs5SPX%2BABogl9d2u6Gyg4fKzFHleZWV9NdMzaru8tqqeq5Z4lYUH0%3D&amp;u2=f7UMPr6CemR0QCt%2F&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa BEAUTECH DRYER BX W</p>
+<p class="product-price-regular">通常価格 ¥74,800</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa BEAUTECH RESETTER LIFT（NEW） -->
+<div class="product-card">
+<span class="product-badge">NEW</span>
+<img alt="ReFa BEAUTECH RESETTER LIFT" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=UUhoc5qiHmmvj24UmYa%2B2E%2B%2BKUrNHg2KzgomUYu8zjD1t48fbi%2BtkZSx24LU1dWjsr1yyB4bPCCzpWHZAoEScx3lFFGaRLMx%2B5h6kTPOxdjKmIth%2F%2FdenTRJ%2BPU%3D&amp;u2=ZFOT%2FGSbPGoDRkmc&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa BEAUTECH RESETTER LIFT</p>
+<p class="product-price-regular">通常価格 ¥48,400</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- =====================================================
+       ② ビューティ・スキンケア
+  ===================================================== -->
+<section class="product-section" id="cat-beauty">
+<div class="container">
+<div class="product-section-header">
+<h2>💄 ビューティ・スキンケア</h2>
+<span class="product-count">70件</span>
+</div>
+<div class="product-grid">
+<!-- ReFa FINE BUBBLE U (WHITE) -->
+<div class="product-card">
+<img alt="ReFa FINE BUBBLE U (WHITE)" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=vGtmJMicgg0BLnsxtey8nXbKfoAFz1QGbAfzKKgRX9TFHJ8eUduwHRX9RhST4MiSVqx1taSIjExWLXQUkD%2FaFhGnAL36Ixb4T6tBf9%2BECkIbBiPWHFiE%2Fm6g%2FWlLQIhgU%3D&amp;u2=UmKpN3mRCBjUgc52&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa FINE BUBBLE U (WHITE)</p>
+<p class="product-price-regular">通常価格 ¥30,000</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa FINE BUBBLE PURE (WHITE) -->
+<div class="product-card">
+<img alt="ReFa FINE BUBBLE PURE (WHITE)" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=5bLC7uy%2F48PWRjwiorFYoxQVC96UkhZdxMYQh8ks%2BVfpY9XxWMXTmciIF984PdZ5eWqk%2FVhwj2XVScIzpTngnyk%2FMNKw9c4FGozG0EequdE643Fo%2BOK1JFzheSN59t9iWKgcSbM6Bye5ks37&amp;u2=ChfqWcoxCXSP4hC3&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa FINE BUBBLE PURE (WHITE)</p>
+<p class="product-price-regular">通常価格 ¥30,000</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa FINE BUBBLE DIA 90 -->
+<!-- ReFa FINE BUBBLE DIA 120 (WHITE) -->
+<!-- ReFa FINE BUBBLE DIA 150 (MATTE BLACK) -->
+<!-- ReFa FINE BUBBLE ONE -->
+<div class="product-card">
+<img alt="ReFa FINE BUBBLE ONE" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=RltMFB5P%2BQb9A8714V77rRnm7DkZyRposPunv6yRGcgEpkGR5uUqfrHMuQKx7RCh5iPw0pXn6IFAoMYJo0ui4%2FQZ8BwGt94iVXkhvi6ImjDRIi9VsHHqThFJ&amp;u2=KvKwwKC59pibPiyd&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa FINE BUBBLE ONE</p>
+<p class="product-price-regular">通常価格 ¥18,480</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa MISTPIA -->
+<!-- ReFa FINE BUBBLE FIT -->
+<div class="product-card">
+<img alt="ReFa FINE BUBBLE FIT" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=MFi9wINP%2BDxm%2BaCn93hCQl6jzphhA67iS5JeeOLtdPPr1BleyOKFBylMawhxssB1NVxN9Hg9mRtZG744Wewb0M8IReFa0Yee9HFnWCZ4wWaaMauRntmee2Kknds65asVbTRFwA%3D%3D&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa FINE BUBBLE FIT</p>
+<p class="product-price-regular">通常価格 ¥18,000</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa PURE BUBBLE CARTRIDGE -->
+<div class="product-card">
+<img alt="ReFa PURE BUBBLE CARTRIDGE" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=lw5SDpO06j25uVFL0ZwnAWuw2zMxkdQZfzUzkQhSizC3WciEa8leKqje5FsejhZFta7yCkteV8al5ILXX99FTUnfNCWcPJNHslPIIztZMB1Khttkv66qYOv6BiDlJLNuhMuZ6RNrhN%2FwjVsKhkjOlc2HJsidLPhBul47ViH5jsKe7nk%3D&amp;u2=mF%2FKCXYjovfkbywt&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa PURE BUBBLE CARTRIDGE</p>
+<p class="product-price-regular">通常価格 ¥2,500</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa SHOWER HOSE (SILVER) -->
+<div class="product-card">
+<img alt="ReFa SHOWER HOSE (SILVER)" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=nzkjvqM11Db17Yhaa0SL4lzf4CzD7yHGZ7penhx1jGwOgGQJPk5B%2FsDF%2FbYbN%2Badw%2BLToaoV6OOIebGNnFMgB43T%2BvmG51f%2Ft8QPlQzdN6EYUzDfCXjx57FnqMq9z6w8&amp;u2=s2ZpjRUkRdjsjI7T&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa SHOWER HOSE (SILVER)</p>
+<p class="product-price-regular">通常価格 ¥6,000</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa BEAUTECH DRYER BX W -->
+<div class="product-card">
+<img alt="ReFa BEAUTECH DRYER BX W" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=K%2FTDVkHER4Gv6JhrlT5AruJUl%2FbuUYQWlHm2qO5c3AlSfEbqj4k7b4Pd4Og%2BdlkTVwCMOStpGPwvFMeRAKveTy34KBTEl3vxjgNqOkXaElHDfHp5iJWpRWUyd3rEpBRc&amp;u2=nxd8sFUu7ge3zb%2F0&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa BEAUTECH DRYER BX W</p>
+<p class="product-price-regular">通常価格 ¥74,800</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa BEAUTECH DRYER BX (WHITE) -->
+<div class="product-card">
+<img alt="ReFa BEAUTECH DRYER BX (WHITE)" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=h%2BERVjPVPsQIFG6N0Cz9%2FMHwrdQhcOLB%2Bz06xecBSvP2TVDeOZkAP2uTyfRSnAUtzjLpiw7oO6Ke8oUxeyGORuI1%2FQ0%2FUVJpEaLd3DmE9Mb8fDcidHkZfUkZg1O573f%2B&amp;u2=ef5OOGReM2Utq8MV&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa BEAUTECH DRYER BX (WHITE)</p>
+<p class="product-price-regular">通常価格 ¥58,300</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa BEAUTECH DRYER S+ (WHITE) -->
+<div class="product-card">
+<img alt="ReFa BEAUTECH DRYER S+ (WHITE)" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=UHKz37HDRSuznL7kIlEruNunF7Zi0MZAayF1f0tJyZU3XaGBPffwbaRh0xWcy8r8SdFpr7FDw0JVqUG2wFaXSz%2BnUeiA2vkYcESUJDZnsFvy2BZ56pI94oCbN8NVFurq&amp;u2=BO%2BJm6v0flgBFUGt&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa BEAUTECH DRYER S+ (WHITE)</p>
+<p class="product-price-regular">通常価格 ¥39,600</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa BEAUTECH DRYER SMART W (WHITE) -->
+<div class="product-card">
+<img alt="ReFa BEAUTECH DRYER SMART W (WHITE)" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=RgMj1%2FHW6AjnS0dNzQFwc4483mGPoAAw0IcwWMUNvU3ScMvZ5YcXAJ3ueN4Ol7nt2dcYTh%2BRExzz%2FDSdRktxEBb4HB4crf33jSgw0KnqPAaWA1FgUltSfW4J1bYxMTfa&amp;u2=zz7ZMa54EJ5%2B5ki8&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa BEAUTECH DRYER SMART W (WHITE)</p>
+<p class="product-price-regular">通常価格 ¥40,000</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa BEAUTECH DRYER SE (WHITE) -->
+<div class="product-card">
+<img alt="ReFa BEAUTECH DRYER SE (WHITE)" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=1YCgRuwnUnMxw5luVk7OpCc0n2x1q3PFai8MfF4JP6yZrIBQzDa2NyDkpSuFNRxPO0cq%2BdtIEvK3OxNxl9MD3jaNTQ5SEixYDbu5FMpZRkb%2BCfLqw61PEPnef5tPS9YJ&amp;u2=bEbi9SlXinYGLXQL&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa BEAUTECH DRYER SE (WHITE)</p>
+<p class="product-price-regular">通常価格 ¥33,000</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa BEAUTECH DRYER SMART (WHITE) -->
+<div class="product-card">
+<img alt="ReFa BEAUTECH DRYER SMART (WHITE)" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=AI3%2BTnbch0jNCfyjmKO2M8yhxJm5Fh17lzsgLIiPi2CerQGOKwcJ3z7tdKJOc9OszPVh6blwt7k%2BSE%2FeJbIE8wBn8MyuSX0WswUvxGA9Cf0RxpjKNwplYt8HmFpUgU15npUW9rgjGmgLzM4%3D&amp;u2=AEESL%2F0%2Fdzch%2FTaM&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa BEAUTECH DRYER SMART (WHITE)</p>
+<p class="product-price-regular">通常価格 ¥38,000</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa BEAUTECH RESETTER LIFT -->
+<div class="product-card">
+<img alt="ReFa BEAUTECH RESETTER LIFT" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=UUhoc5qiHmmvj24UmYa%2B2E%2B%2BKUrNHg2KzgomUYu8zjD1t48fbi%2BtkZSx24LU1dWjsr1yyB4bPCCzpWHZAoEScx3lFFGaRLMx%2B5h6kTPOxdjKmIth%2F%2FdenTRJ%2BPU%3D&amp;u2=ZFOT%2FGSbPGoDRkmc&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa BEAUTECH RESETTER LIFT</p>
+<p class="product-price-regular">通常価格 ¥48,400</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa BEAUTECH RESETTER (WHITE) -->
+<div class="product-card">
+<img alt="ReFa BEAUTECH RESETTER (WHITE)" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=8g28su0d1FrtrUlCZWXEykdDTL3ZdHOLKt6B84YJ6nYs4OG78LJum3rt9Ze44SKHd0I2%2FWN9DNuXoi%2FHv3kXuenDUo3qugmo5oqwnwkWcrFnbZUMtx2ZUzE6wE%2FiON6W&amp;u2=IUQGz3mXb%2BbuOSNK&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa BEAUTECH RESETTER (WHITE)</p>
+<p class="product-price-regular">通常価格 ¥38,500</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa MONTECATINI DRYER -->
+<div class="product-card">
+<img alt="ReFa MONTECATINI DRYER" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=YjeeCPjYUvWvAhOS0%2FxN8w%2Fd8oBqjHM%2FhD%2BNWy%2Fn0ypFel780YiQijiWSIYwvfCVkj9pczwhi6GK6chVCQFE%2FiHpK2ajp5d4EpaCQaL8m7XbcCBSqTZxYE82t4U%3D&amp;u2=5c%2BrtmmfCEuo%2B9j4&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa MONTECATINI DRYER</p>
+<p class="product-price-regular">通常価格 ¥121,000</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa STRAIGHT IRON PRO+ -->
+<div class="product-card">
+<img alt="ReFa STRAIGHT IRON PRO+" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=M0LYV%2FXXTU8RZCXo8UBEOAFvzg2lRJ8Se6W%2F0v23QnotXsPSUridZ8d5OHFXX1Di8mfLA8wlzhdkjRpWXOnDG8PHqA7oRJpgkAN1MsqcHCRYp%2BvTxNUd%2FghTColgmLaB&amp;u2=WnJkXoN2K05YSaL9&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa STRAIGHT IRON PRO+</p>
+<p class="product-price-regular">通常価格 ¥28,600</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa STRAIGHT IRON PRO (WHITE) -->
+<div class="product-card">
+<img alt="ReFa STRAIGHT IRON PRO (WHITE)" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=zM8Ycowh2G5nlKCvkwgfV%2Fe%2B6RUqZOCwcX1GZnIndeGrQlSFpkA1nECP%2FAqsRF4gOihZyh65iQljrTB0bCr70PQzRVoHRfG4112q5zurcNW838yWhASqwSW6RK%2F%2B2a1G&amp;u2=p6D7VJtthxOGGvR%2B&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa STRAIGHT IRON PRO (WHITE)</p>
+<p class="product-price-regular">通常価格 ¥23,000</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa POWER STRAIGHT IRON PRO (WHITE) -->
+<div class="product-card">
+<img alt="ReFa POWER STRAIGHT IRON PRO (WHITE)" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=KdGX2OvoIltR0OhuQ99iFP%2FThn%2BfqaEMqZDPitLc4nplkdgDiYm9WNSDIah%2F8KPgKz33%2FTNVTfuYrc4kcce0kPCQuMCADKkWrtdGHRZXsiTljxvR3BZI9cVrWK6X2BLI&amp;u2=3H4EsY2N%2Fa%2Bo2Mej&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa POWER STRAIGHT IRON PRO (WHITE)</p>
+<p class="product-price-regular">通常価格 ¥33,000</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa BEAUTECH STRAIGHT IRON (WHITE) -->
+<div class="product-card">
+<img alt="ReFa BEAUTECH STRAIGHT IRON (WHITE)" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=R9lNOcbrK1d8FFsT8zGhPyHXbb7MpoYFphkKZP8hEbt10YJKwtabHmAoFAqpkUEDbkDR8TAd%2BownNqWtdUPvcTS3fUU76AIAvhWC2SGkhZn4NFugsXilx0sukvhVRyJLJVC4RoT%2FiOLV&amp;u2=hkTdnRMCdAWNekNZ&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa BEAUTECH STRAIGHT IRON (WHITE)</p>
+<p class="product-price-regular">通常価格 ¥22,000</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa CURL IRON PRO+ 32 -->
+<div class="product-card">
+<img alt="ReFa CURL IRON PRO+ 32" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=Qqk4m%2B5Ck%2Fb%2Brypsl7bU1EGKruEc8JjhH1yYEMNG7CmmSJ%2Bb70vnhOgOryOJ4jSAF3fGTFTWrI5WyKs1zBjFTzjdylFTByEnWYiMLNRyR9Ld0uaZGw7OqUR21w4r19fG&amp;u2=hsjolRKx6sw3C7X2&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa CURL IRON PRO+ 32</p>
+<p class="product-price-regular">通常価格 ¥29,700</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa CURL IRON PRO 32 (WHITE) -->
+<div class="product-card">
+<img alt="ReFa CURL IRON PRO 32 (WHITE)" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=YpD3aUcMW2ATF5h9ZKM5MuWwQW5Ku624bQtjH8g%2F%2BAa9XAfKHmOdh2w%2B8b4n3OpLBVYtUu%2B5XxyEWH9Z9cMjiTgABfFSJo36zOArX3nMkopmzifh2kCuB3WUqvoyXsVD&amp;u2=7jVDmX8jhUEq3DCJ&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa CURL IRON PRO 32 (WHITE)</p>
+<p class="product-price-regular">通常価格 ¥25,000</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa BEAUTECH CURL IRON 32 -->
+<div class="product-card">
+<img alt="ReFa BEAUTECH CURL IRON 32" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=vpRFChChgGfvLFZNzcMyu7mYbvdM2JY5VhHg1CoXmQq7Shpmaa3BFCwt%2FuIAuGZ6DI4UAFwWWnbLElIiFCFqk%2BH9Ha5yoj0vQUi59qms6YScxWu3BB9ZOBh0mhK7iWFfUluTlvEl0ojL&amp;u2=HflfKILpg4ZQuQV4&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa BEAUTECH CURL IRON 32</p>
+<p class="product-price-regular">通常価格 ¥24,000</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa FINGER IRON ST (WHITE) -->
+<div class="product-card">
+<img alt="ReFa FINGER IRON ST (WHITE)" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=%2B8oQZ4fUvTP8oOxDppZhYUNHmd7ZirHqPAdmMH7oc3bRZS5qXdWbetMVwvdb17h6VC%2FEyTXCrTw6rTxxOxtfmLtUDF0k5EicPMq3pTtB1A4X1c%2BqkTIVK0BLD0Z2V6Agsjn3iWnjNP4k&amp;u2=3woWl9cV4kGWDQD1&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa FINGER IRON ST (WHITE)</p>
+<p class="product-price-regular">通常価格 ¥14,500</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa FINGER IRON ST 6 (CHAMPAGNE GOLD) -->
+<div class="product-card">
+<img alt="ReFa FINGER IRON ST 6 (CHAMPAGNE GOLD)" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=y8KwyK3x6oaA36tqYCqYUiX3sXh2S8st2tuQMLWjK3%2BemQDJXDhaMzz8u0tipwVf%2BTWr%2F5DoKB6lnP%2BZQEWFAu1GqaBz%2FAfOqognKjmxyDaeXMkZvr1vIrRlG4yF8qgcjW0zdljERw%3D%3D&amp;u2=m2NOZ9ZKcATNrQQr&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa FINGER IRON ST 6 (CHAMPAGNE GOLD)</p>
+<p class="product-price-regular">通常価格 ¥14,960</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa HAIR IRON CASE -->
+<div class="product-card">
+<img alt="ReFa HAIR IRON CASE" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=WZsB%2FXXXX6Fn%2Bsru14W5vXIZSz5yv9tN6EoePxcxZ06%2B%2BmIzjohKaYlLoSWZlra%2FU%2FHWs3nt%2FdPEcGYXVTb3m%2FZvdvXszggu0K16mqUay6gpM%2FJLMg%2F5zlqpp1A7WBWl&amp;u2=q612veTwFR2K%2FLcp&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa HAIR IRON CASE</p>
+<p class="product-price-regular">通常価格 ¥3,300</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa BEAUTECH RESETTER HOLDER -->
+<div class="product-card">
+<img alt="ReFa BEAUTECH RESETTER HOLDER" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=Y8D5T%2BPoiCFtgWMg6s%2BckITpGEh87LyiV3D5OffQYjtj9Esad%2BnfrxM4hUypPSh3ZortSjw05uC6wTSuf9iMKifu3lVfz9iV6RF4v%2FToind77k%2Fsxp8hD4T%2Fi6mMk5Sw&amp;u2=u6UW%2BIzEPQn2VtHh&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa BEAUTECH RESETTER HOLDER</p>
+<p class="product-price-regular">通常価格 ¥3,960</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa BEAUTECH DRYER BX STAND -->
+<div class="product-card">
+<img alt="ReFa BEAUTECH DRYER BX STAND" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=pEKBmaOroZ64DomDwxGQrqeHOE2zagI%2BXAFuPsOXq8tI8ThyQa41A0y7yvDsZpdMZ5HBjHVi%2BALFEFxujXI9CIsVNLqcKZXmDPsdw7GADi495PAPf9iEw0a0p0HpqXrd&amp;u2=vaw05bgHuIyXTtfe&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa BEAUTECH DRYER BX STAND</p>
+<p class="product-price-regular">通常価格 ¥4,400</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa BEAUTECH DRYER BX HOLDER -->
+<div class="product-card">
+<img alt="ReFa BEAUTECH DRYER BX HOLDER" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=0gpp%2FvqqpGdDTeg19HfF4bESdFVhyVZl4G4MjZu7oOai8CoZmsuwOfUMPbTOX5HIUDRlCPy%2BifAQVa3C5Zqlkp7ayMUNRq0tMrqqw4I1Q09zxzNz9KRa5u9ZscZB8V7C&amp;u2=RbBYJQ4EshLVq2Pn&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa BEAUTECH DRYER BX HOLDER</p>
+<p class="product-price-regular">通常価格 ¥4,400</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa BEAUTECH DRYER S+ HOLDER -->
+<div class="product-card">
+<img alt="ReFa BEAUTECH DRYER S+ HOLDER" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=MfFM8G0px%2FPfqpIJLYloT69ZAEY5PZIiX7litoLFBphHym%2F%2BR5g0c2pvOoSXBdBUvk%2FQT0IAR%2FVnF17k3SBVVzpFUbdzTefssSkSJoW3isx07hRSo17iZFLA3p9ghBbc&amp;u2=ROyZrfrTL1pAxTaN&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa BEAUTECH DRYER S+ HOLDER</p>
+<p class="product-price-regular">通常価格 ¥3,300</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa BEAUTECH DRYER SMART W HOLDER -->
+<div class="product-card">
+<img alt="ReFa BEAUTECH DRYER SMART W HOLDER" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=wsxkgyBnt5BEnj70iWiffBissg0W8a7W8jfh%2BGn7%2Fb37oUyLPBdcAW9JZgosSa%2BPuNRaqwKGs1V%2FXDs5B35%2FXmSv58B2LoNk033q38vbBa4TCiZOM4mX6BA0CafTyCQ3&amp;u2=8RoUn1OnIFbtitSw&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa BEAUTECH DRYER SMART W HOLDER</p>
+<p class="product-price-regular">通常価格 ¥3,300</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa BEAUTECH DRYER SE HOLDER -->
+<div class="product-card">
+<img alt="ReFa BEAUTECH DRYER SE HOLDER" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=SVr3%2B652bMPwRoR0MtmIq2q%2FNQT3sXmNgkTN5WiTsqmvttOZemuOrjzhuKqQgNxJC0zHBaSCwDuYF4STTiMv2PBkl2WWiSftfdsCTgtfltEKupyXCwUJBOaf7qrqgCnG&amp;u2=EyanCQ6guyQlfvLt&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa BEAUTECH DRYER SE HOLDER</p>
+<p class="product-price-regular">通常価格 ¥3,300</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa BEAUTECH DRYER SMART HOLDER -->
+<div class="product-card">
+<img alt="ReFa BEAUTECH DRYER SMART HOLDER" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=xah2HEfEyvwsYsguicZOUxC5%2FjB1PtyEP4QL51abriwhAKMtdp5tocz27Eqsgi1a3v5A98%2BKWSxm22c8Kmi5UGAovNtU6V326Kw9MvYoNcryPnO6CrIwKu%2BVir0PFqGk&amp;u2=JvY9PsB%2BDGi6P2Vr&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa BEAUTECH DRYER SMART HOLDER</p>
+<p class="product-price-regular">通常価格 ¥3,300</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa HAIR IRON PRO HOLDER -->
+<div class="product-card">
+<img alt="ReFa HAIR IRON PRO HOLDER" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=VFKNG5EnK4RckQTd2YGtW2o1WF%2BrlwGBAbZMudiWOoCyrFQQSLbVu%2BULkIcR%2FSR%2F5OdqT8ncylSNwaE0tb0otOrJvJLPGy5Ba%2BqoG9Ib9z3bC028NUh0bfPAylI5GiD3&amp;u2=ZuYDOx2PdmELpc0T&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa HAIR IRON PRO HOLDER</p>
+<p class="product-price-regular">通常価格 ¥3,300</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa BEAUTECH FINGER IRON HOLDER -->
+<div class="product-card">
+<img alt="ReFa BEAUTECH FINGER IRON HOLDER" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=pME3d1ghBpV%2FW5CGwtRZYBKxlM0Oc7GlYWP%2Buxonwtg78RSo6Y4ovlc6KUyr0nQphahE1QNHDkW2nc5dDMQ0PLD2EVIUHG%2BfLj%2FrL2%2B7Cl%2FZqDORsOcXmIu8T4wWY7ol&amp;u2=rIxG%2FzTM9qjpCiFD&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa BEAUTECH FINGER IRON HOLDER</p>
+<p class="product-price-regular">通常価格 ¥1,980</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa BEAUTECH IRON HOLDER -->
+<div class="product-card">
+<img alt="ReFa BEAUTECH IRON HOLDER" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=H4X3tlp7tW4TuZf64zBlE8SBUI6uy1Y8kZxOtOhc0DQkuoZeZZbQ90lNwNqAYJtTQZYAgAOwaRJjasemYiAqknXQxcRrowjFyZcR2iFXdjF%2B1okps%2BHfN1WEEfc2llfX&amp;u2=sVzUIUrHWI0SiqtJ&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa BEAUTECH IRON HOLDER</p>
+<p class="product-price-regular">通常価格 ¥3,300</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa HEART BRUSH (ROSE GOLD) -->
+<div class="product-card">
+<img alt="ReFa HEART BRUSH (ROSE GOLD)" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=GjaIha8PDFmmOKq44BnOPNlFdYSnBITvwz0LDnSHxdZcsxw1autiwpKiUKwNnv2bsA3LkVaywc2NdJU9cvWxkdvr%2BuJQf%2ByY18P%2BSPORQbTgPm4uVIt9U1agA4ze%2BXY9NV4kmbxUGA%3D%3D&amp;u2=tPx4ks6ZUZNm94is&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa HEART BRUSH (ROSE GOLD)</p>
+<p class="product-price-regular">通常価格 ¥2,970</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa HEART BRUSH MINI (ROSE GOLD) -->
+<div class="product-card">
+<img alt="ReFa HEART BRUSH MINI (ROSE GOLD)" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=gBxotGXjR0Z%2Fyl61Pcpj6agCsvNNtvGNl84V089qxMQ79yigwBq8xN8bIWIgOHXlTAEc1zNi9yxdRCenU6gHSgzPf78WIxs%2Bbq8QkAGxFaGhPSF5xZqP1DqalmM6XU7a&amp;u2=lSW8c0wA%2Fej0yCQ5&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa HEART BRUSH MINI (ROSE GOLD)</p>
+<p class="product-price-regular">通常価格 ¥2,970</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa HEART COMB AIRA (ROSE GOLD) -->
+<div class="product-card">
+<img alt="ReFa HEART COMB AIRA (ROSE GOLD)" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=6oet9N6N4zKRBLxVARBMNF2nwQqLQg%2Bj0gQjj7EsXtOs8jUWmdaM2mXURLEaPc8y8B0vkrPo7whYOrj1fDhLDb19lCWNaNZGyoSmZGHFLd91RuNNPoNeIsVzu2lHFt5Iymh8ULW7NA%3D%3D&amp;u2=HVUgYxSLPLloV5C8&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa HEART COMB AIRA (ROSE GOLD)</p>
+<p class="product-price-regular">通常価格 ¥2,970</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa AILE BRUSH (ROSE GOLD) -->
+<div class="product-card">
+<img alt="ReFa AILE BRUSH (ROSE GOLD)" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=47D%2Bn2uHGygqHCyz5o2l5Tgyk9erH4z1lOIair9QwxSikJZhMCTpfNCGSeTIKSP%2FpmcnPKcoeo5vguSbbAsk97pcjsB4CCvhx2OCYSp28cHc8s7e%2BNYA%2F2LfJkfxj8IaRvW9NtmJog%3D%3D&amp;u2=IsINpKBLax9NglYY&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa AILE BRUSH (ROSE GOLD)</p>
+<p class="product-price-regular">通常価格 ¥3,800</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa HEART BRUSH FOR SCALP (MATTE ROSE) -->
+<div class="product-card">
+<img alt="ReFa HEART BRUSH FOR SCALP (MATTE ROSE)" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=5yHDJ4LdYLpPgwrh%2Fubpn%2FeZQZ%2B%2FpxmoP4UrQmlpcjdzYQ2Md2RRu3wiF23INN%2FifAMUuGn7f3vQpY15Fg4%2BZIAomovQixVpXw3ZqoZZCW5NNxCRATmAHNwWa%2F0moL697t%2Bb6Yh3BQ%3D%3D&amp;u2=hVtXyWAuGWT1YhZ2&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa HEART BRUSH FOR SCALP (MATTE ROSE)</p>
+<p class="product-price-regular">通常価格 ¥2,970</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa MARQUIS COMPACT -->
+<div class="product-card">
+<img alt="ReFa MARQUIS COMPACT" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=h4CJJO0eNJTTaLQy7ROEG9SGIMJ%2B1tDirx54XqhsG2V7UwgkkF6lDvEvo%2BkQFAx0du%2F2giRKs7mRXciGAHuE0BQTUTj1NUwp8dKchtl9QuKnFmbXgR%2B4ViVOdMOW5bk2&amp;u2=PsJbMaTnpmb1yL3G&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa MARQUIS COMPACT</p>
+<p class="product-price-regular">通常価格 ¥8,800</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa MARQUIS WITH -->
+<div class="product-card">
+<img alt="ReFa MARQUIS WITH" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=tWdrOpSBUlaxfBtU%2BZtUjXudB%2FdUZpP4pn9eiNq9uxiS72WsLXU0B9Ko7FKwmcEm0zqhcnJCrS8DT8HfoOVGBaIWcoFMrGIQQg9YRQmtJ99i3v719AnWzep%2BODyjCegF&amp;u2=HinbhYB3D7ZH0Me6&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa MARQUIS WITH</p>
+<p class="product-price-regular">通常価格 ¥4,620</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa MARQUIS TWIN -->
+<div class="product-card">
+<img alt="ReFa MARQUIS TWIN" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=i1drxM7gYHjlMjHjXZot%2FDJHVHug62XoyfAUsoBj0ITCoG8Db%2FweclEEKRJxxZ3JykF6N9zOdxmb1wxtmIO29ywMmaPtpbW7aKRLzTsyt3d9N1qRhkwXSB4XPXY%2FCJVQ&amp;u2=ieQ879NCWomU71SK&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa MARQUIS TWIN</p>
+<p class="product-price-regular">通常価格 ¥5,500</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa MARQUIS ARRANGE -->
+<div class="product-card">
+<img alt="ReFa MARQUIS ARRANGE" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=Cs1aKiEEv2kVGH5nUyzqA%2BaP9j7TimIc%2B2hgrC8ROz9FirXU1HBvJmDbymgEO2llcsCwmNlIxxEb7wBwbBCy6AyXtAk9SAOPFpUleBNzGSrjwJTn%2FvSweZgZoktCr4R%2B%2BL&amp;u2=qV0AmxPzTS0AivNL&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa MARQUIS ARRANGE</p>
+<p class="product-price-regular">通常価格 ¥4,950</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa MARQUIS DEEP -->
+<div class="product-card">
+<img alt="ReFa MARQUIS DEEP" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=sT%2FSz1JuiMDmRvc%2BIkqtT0YZbS%2BC4hO5nYqqHSTUK4WY%2Bd48YekEEKRxeHFY0Lo%2F2Y5R1xbUj4iV1FUTuRAwtrgETEfeDa6P6EsE0fpOZdyGZN9WcmfOk5gGoeNBO2Iu&amp;u2=px7YGtwPLmsbAZ1S&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa MARQUIS DEEP</p>
+<p class="product-price-regular">通常価格 ¥5,500</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa ION CARE BRUSH -->
+<div class="product-card">
+<img alt="ReFa ION CARE BRUSH" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=5XpYxPP2UNxmXQRpXZ8SKVE3GY4L0DT1AfahcRpBgGUvLvgJDwz48vbuPS%2FZ2DOSpUZL9BRpNTza5Xk5g7frLl0OAHlHTD8Arg8FZcXeZvk9344HlOJADHMiiptRFr25&amp;u2=BYV08ueEUp%2BJ7zOJ&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa ION CARE BRUSH</p>
+<p class="product-price-regular">通常価格 ¥6,050</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa ION CARE BRUSH PREMIUM (ROSE GOLD) -->
+<div class="product-card">
+<img alt="ReFa ION CARE BRUSH PREMIUM (ROSE GOLD)" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=IAlzfTW50noIxrXAPq3%2Bond2qKc2vA0MUOdHajYPlAxjaIceTk1kkVQnMzqHE1ITedUVYqnGAiyVHgvfWMDiFV6%2FvJEh34YoY81hlfsXz%2BwEfwZYkW2skiXtlApDIwfD&amp;u2=tbQBsH926lkHBmyr&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa ION CARE BRUSH PREMIUM (ROSE GOLD)</p>
+<p class="product-price-regular">通常価格 ¥8,500</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa HEART MIRROR (ROSE GOLD) -->
+<div class="product-card">
+<img alt="ReFa HEART MIRROR (ROSE GOLD)" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=ydvMHA2Sqyu0ujD6wLxQcm6Gt9tzurIyVHhEQN6EK4Fj%2BXcowwS2XXDsY2b8KZjQrs0AEQXfws8AyQYS1c9M6oDNazW6TQdtscwpZZgKeSuJmaskbX0dGOsuB7sqNWLV&amp;u2=%2Bpkvb3c4wdXcJa4Q&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa HEART MIRROR (ROSE GOLD)</p>
+<p class="product-price-regular">通常価格 ¥2,860</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa ROLL BRUSH 35 -->
+<div class="product-card">
+<img alt="ReFa ROLL BRUSH 35" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=YRAq7%2BcBdpPfhCLB0WUAOEhj5BhjPWlpGyw%2BFFtTPhORhKNsDAPU5CmBNtnYQmO%2FPj0lR90dDBCJSGLkSygtkhaFNF%2BjclrbovTQq8SUDJrqhVzLSRHTSFAVYc4FDme%2B&amp;u2=J3Vq1rY%2FLtnxaL9S&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa ROLL BRUSH 35</p>
+<p class="product-price-regular">通常価格 ¥7,150</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa ROLL BRUSH 45 -->
+<div class="product-card">
+<img alt="ReFa ROLL BRUSH 45" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=Ak8NE6cdlmfgseHFAUFL9KDmCfWwflzyBFgABeUWnshutWihnKtVo8y%2BBEtqCZycVn47v%2BfNIu0lIDoFAGvZ6%2FBFEKxQZGBbQ1FftBOhTF4Ol5yDDU1oySBqxGQYb9nz&amp;u2=Sn%2B2FfuovbPbMxmB&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa ROLL BRUSH 45</p>
+<p class="product-price-regular">通常価格 ¥7,700</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa ROLL BRUSH 55 -->
+<div class="product-card">
+<img alt="ReFa ROLL BRUSH 55" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=%2F45jnHeK75WtfrEQu2AiyKLn%2F%2FpkDmaD1l11De2uBgJCAkq7ly7wblkQOzmI%2BBNjqCBv9sNHRG9d7ikrXab7z4reisDJRbtV%2Fh1wnTcohYR4ce4rHBevwDqIM%2BOmyVcn&amp;u2=yoUgp18aqc7udRRP&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa ROLL BRUSH 55</p>
+<p class="product-price-regular">通常価格 ¥8,250</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa SHAMPOO BRUSH MILK (SILVER) -->
+<div class="product-card">
+<img alt="ReFa SHAMPOO BRUSH MILK (SILVER)" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=oqVh%2F9AjJAIMy6YpxUtt%2BW%2Bf7mD3c4qUZFVIcDCHyEIB3zj63X7Uojb7iWGEtypz%2BX63PnBrsJx%2B7ZoIkMEDZAzKk9D0Y568QZhMqfpN7s%2Bf7XON%2FysPpRgU5Zkul511&amp;u2=UKegxOqitfzU9SLF&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa SHAMPOO BRUSH MILK (SILVER)</p>
+<p class="product-price-regular">通常価格 ¥3,300</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa DRYMEE -->
+<div class="product-card">
+<img alt="ReFa DRYMEE" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=VgVeaKjywWlPHcrcc7yGQjYGliz%2BafKVs5WpoTjUhxafwj4YL4FJiHU%2F9au9nR5SYdPdlsN6wK8YdlfbkclV8VwF7bB5FqMaPjw2%2BAlaGXClStkfGzTc5CQeSPNX%2BpQB&amp;u2=dRMw4I6Ze2DJ6dej&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa DRYMEE</p>
+<p class="product-price-regular">通常価格 ¥4,400</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa HONEY QUEEN SHAMPOO 500ML -->
+<div class="product-card">
+<img alt="ReFa HONEY QUEEN SHAMPOO 500ML" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=QBnbOLNGRt12GMBLFm8mR4UOV6U3b7U0KNZYnavz5xuwbCODdNxrqDi6SgjtfPXRlrc4K51vSvfh94p%2B7Y43Gwsdm7BfOs5TsQ9R0aq7cb0LtPiaKPy%2B2G81l96yGD10&amp;u2=kZPSv9FqOgNj9LoG&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa HONEY QUEEN SHAMPOO 500ML</p>
+<p class="product-price-regular">通常価格 ¥2,420</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa HONEY QUEEN TREATMENT 500G -->
+<div class="product-card">
+<img alt="ReFa HONEY QUEEN TREATMENT 500G" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=Z8MXg4W3Y8mTVdBhshjpvMqc5BBNs1M%2F8tTB7%2B3Y9ruHF%2FmgbsC%2BencVT8plqK6IIdn7GtH6zxx3bMby1aP%2FlyPpOoQKBgn%2BFJef4otpBVMsw9YOGqomxf%2BeDjSAmSLV&amp;u2=kBMDeh5Q2RjaffAz&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa HONEY QUEEN TREATMENT 500G</p>
+<p class="product-price-regular">通常価格 ¥2,420</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa HONEY QUEEN OUTBATH TREATMENT 130ML -->
+<div class="product-card">
+<img alt="ReFa HONEY QUEEN OUTBATH TREATMENT 130ML" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=AQQr6B3B6cqjqescAJeA8nn%2Fu8vGEXZDlD5xoMsa6L1UJwJIqG4MC0pDIU4%2Byl7Gqaxb8PdP6xHmAnXuBXOWr5U7TYtP1TfPyx5sWeA5rNSEeqilAVhPvDfFwPqHC3mC&amp;u2=MPQhx8Mhcd7t0Wsu&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa HONEY QUEEN OUTBATH TREATMENT 130ML</p>
+<p class="product-price-regular">通常価格 ¥2,420</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa MILK PROTEIN SHAMPOO -->
+<div class="product-card">
+<img alt="ReFa MILK PROTEIN SHAMPOO" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=S6eFFcCG35ygP7ttj4dw5pbkfGVvxuGxjwQC2LMXuJdu%2FRXLnmeLEKT3cE7ZXmsbJvuGozIIW8c54CjFha969kNYmaAz1SnaIWBdCaSGxFXWzyOi%2FgBFttloy23TyzbZ&amp;u2=RnScWW24lU02o2Cz&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa MILK PROTEIN SHAMPOO</p>
+<p class="product-price-regular">通常価格 ¥1,980</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa MILK PROTEIN TREATMENT -->
+<div class="product-card">
+<img alt="ReFa MILK PROTEIN TREATMENT" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=g93GARueu1brxYxKn8dttF1lE6atu3DDtCLhWc8l7p2qJjRN%2B%2Bp3WR7pKTLzJyz12Zbu0MP0EmfuxLGYl1dA7NWWz%2B3%2BRBxM9yW%2FZ2LevhLYCUIddkDN5VgpwloWS5DM&amp;u2=KbrroSVe3cFbdzwZ&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa MILK PROTEIN TREATMENT</p>
+<p class="product-price-regular">通常価格 ¥1,980</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa MILK PROTEIN OUTBATH TREATMENT -->
+<div class="product-card">
+<img alt="ReFa MILK PROTEIN OUTBATH TREATMENT" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=Frt4Lk0zX%2Fr2F%2B%2BrSgNNqPiwsnHA%2BX2FZ211NWsWROJmuZKQJmkDT9LxQrqIUJg%2FlhFzjS%2BwSOr%2FNY8CeJdKKihnBGKcyKxbSON9ufFjr1N9SCVoryhnQ8iyYrqGbsXL&amp;u2=e3dSSGebF%2FtNDFAD&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa MILK PROTEIN OUTBATH TREATMENT</p>
+<p class="product-price-regular">通常価格 ¥1,980</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa BEAUTECH SHAMPOO 500ML -->
+<div class="product-card">
+<img alt="ReFa BEAUTECH SHAMPOO 500ML" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=76F1CQJWjR3lfa9BGGn6yqgbEb%2Fhl9nqfjrWtbTZznJGqLk9PuxdhcOsIygtc%2Fw7NI3E%2BzDHdKGQilIF8OnL2tgwmuGUZRSgqnwm%2BTRRTj7x1UQQJfLbwy%2F4MpLFrN9&amp;u2=kPXStfL%2BW4RbLhXQ&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa BEAUTECH SHAMPOO 500ML</p>
+<p class="product-price-regular">通常価格 ¥4,800</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa BEAUTECH TREATMENT 500G -->
+<div class="product-card">
+<img alt="ReFa BEAUTECH TREATMENT 500G" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=o08gOtTeAUdG4mfRgtSGNxyVVhmBcKpwkfq%2BRolMZyoJbil8EHeMjwgrrU4%2BFTx%2FN36lXn3AwBtN4qNiNQRd5uXiCjhtYb4glH7rg8LP5hdPWnmHEORpXB2G7bLzz8CI&amp;u2=vR8TI14yAiu0KuVs&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa BEAUTECH TREATMENT 500G</p>
+<p class="product-price-regular">通常価格 ¥4,800</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa BEAUTECH MASK -->
+<div class="product-card">
+<img alt="ReFa BEAUTECH MASK" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=7T%2BmLJrYHLCXoabRt1G8ct5PMzeYDonygWdyI1RE9V0kLMTWF0FrBdb%2FaLD5ezvxiUvlv3mIzzxhtmkbS6n5wJ6eG6FvBIVTuS6zTAIK02OclU1A31M3nIt6pypcDzGM&amp;u2=lJSMDmfmqu2K%2FHiP&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa BEAUTECH MASK</p>
+<p class="product-price-regular">通常価格 ¥4,900</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa BEAUTECH BODY WASH 500ML -->
+<div class="product-card">
+<img alt="ReFa BEAUTECH BODY WASH 500ML" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=L6q0Y4DeR2RL5aQlU%2BCGFJn%2FiQ00XkVTPvlGc1Ju%2B%2FGuJrDqCCCvvJ8HwQ1aYlNw6q%2BondZj1DjOeY2uEv5%2Bj6RDBrKK2D%2B1QZkC4BEnTJvtN7VNZ3ovGQGcvlXTF0Q6&amp;u2=Y2IweJKO8XmsrFJ5&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa BEAUTECH BODY WASH 500ML</p>
+<p class="product-price-regular">通常価格 ¥3,900</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa ION CARE SHAMPOO -->
+<div class="product-card">
+<img alt="ReFa ION CARE SHAMPOO" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=0DntwT2j%2FfDet0vh1rLwL5LgOcFCH%2BA4XgGCYsUolKdzWm9WvRKNSj%2Fnp3qVfbj5%2BPGDjp9NUHXXGS9RK2ftW7N949DwpsewPx2Y2Qn%2BQSU3P7T7c15RTEY5SH4qTuCK&amp;u2=GOBVH8MBSNUkDmsl&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa ION CARE SHAMPOO</p>
+<p class="product-price-regular">通常価格 ¥2,420</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa ION CARE TREATMENT -->
+<div class="product-card">
+<img alt="ReFa ION CARE TREATMENT" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=e3Dm0ZMIjjhg5sYgoMo2JnBtak52LL1xqHple0ryOuiDl05ggEwIK29EKNuS8WZ2T7eINJxSiP0x%2FyU7ggpieA%2F9XDzrHroHr3BWQ%2FjhLlYnhNHy69hqAE7tpVekPWhI&amp;u2=plOXilq3brxOm0Cb&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">ReFa</p>
+<p class="product-name">ReFa ION CARE TREATMENT</p>
+<p class="product-price-regular">通常価格 ¥2,640</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- ReFa HARI KEEP COLLAGEN -->
+</div>
+</div>
+</section>
+<!-- =====================================================
+       ③ スポーツ・フィットネス
+  ===================================================== -->
+<section class="product-section" id="cat-sports">
+<div class="container">
+<div class="product-section-header">
+<h2>💪🏻 スポーツ・フィットネス</h2>
+<span class="product-count">7件</span>
+</div>
+<div class="product-grid">
+<!-- DENBA Health ハイグレード（スポーツ向け） -->
+<div class="product-card">
+<img alt="DENBA Health ハイグレード" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=1V5U3kJ2PhFEiGyU20iMKIpVhCE28d8RRtAXMCIkzKjrqhYMTqMIC6GZOcE20efo9CZ%2F8UwCIuANE4ZRNewMsi4PMz79ZDShO8WZMSs0%2FtxJtAuS1Q%3D%3D&amp;u2=wcS%2BkESiuFyGoXD0&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">DENBA</p>
+<p class="product-name">DENBA Health ハイグレード</p>
+<p class="product-price-regular">通常価格 ¥900,000</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- DENBA Health スタンダード（スポーツ向け） -->
+<div class="product-card">
+<img alt="DENBA Health スタンダード" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=zNYBlzMjRJvMnGCRoMW5bvvOXPhX8LbRRp%2FZOcJJ2DHJcnGfo6f%2B%2Bip0aZV6l%2FrvBinyswKa6qEbleGU3mmwPKeK9xPRkPxImvzAE29lbAUrWg%3D%3D&amp;u2=eJtwp30xV576xQfr&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">DENBA</p>
+<p class="product-name">DENBA Health スタンダード</p>
+<p class="product-price-regular">通常価格 ¥550,000</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- DENBA Charge（スポーツ向け） -->
+<div class="product-card">
+<img alt="DENBA Charge" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=hATY35sBaW%2FOapUyEmTmU2acxg9hwbTRH3kmdvrUs%2FDVFoyRtBHM1Ovqh0cVEuROxbZLxbwk99sGIB%2FzTmZncdHXDQqTQR9IW648YrgmiuwL1%2F3cXRUOZ1Ezo1g2Ng%3D%3D&amp;u2=a%2BLFhIHSOMRsjzy8&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">DENBA</p>
+<p class="product-name">DENBA Charge</p>
+<p class="product-price-regular">お問い合わせください</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<div class="product-card"><a href="https://hyperice.jp/products/gift-wrapping" rel="noopener" style="display:block;" target="_blank"><img alt="Gift Wrapping" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/item_gift_wrapping_d33ae49d-7792-433c-ae95-89d05fa6c2f0.png?v=1758800344"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Gift Wrapping</p><p class="product-price-regular">通常価格 ¥330</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/golf-holster" rel="noopener" style="display:block;" target="_blank"><img alt="Golf Holster" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Golf_Holster.webp?v=1755007511"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Golf Holster</p><p class="product-price-regular">通常価格 ¥3,080</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/golf-pack-artic-gray" rel="noopener" style="display:block;" target="_blank"><img alt="Golf Pack - Artic Gray" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Golf_Pack.webp?v=1755007516"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Golf Pack - Artic Gray</p><p class="product-price-regular">通常価格 ¥26,400</p><p class="product-price-member">会員優待価格 ¥21,450</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/golf-pack-black" rel="noopener" style="display:block;" target="_blank"><img alt="Golf Pack - Black" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/item_golf_pack_black_647db3c3-9e89-417d-8eea-2031f8c44a55.png?v=1758800642"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Golf Pack - Black</p><p class="product-price-regular">通常価格 ¥26,400</p><p class="product-price-member">会員優待価格 ¥21,450</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/heated-head-attachment" rel="noopener" style="display:block;" target="_blank"><img alt="Heated Head Attachment" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/heated-head-thumb-kXvfNhmk.jpg?v=1755007245"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Heated Head Attachment</p><p class="product-price-regular">通常価格 ¥12,100</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/hyperflux-arm-attachment" rel="noopener" style="display:block;" target="_blank"><img alt="Hyperflux Arm Attachment" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/main_1024x1024_2f392a06-165c-4b28-9519-7fb411e05101.png?v=1758804865"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Hyperflux Arm Attachment</p><p class="product-price-regular">通常価格 ¥54,000</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/hyperice-18v-charger" rel="noopener" style="display:block;" target="_blank"><img alt="Hyperice 18V Charger" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Wall_Charger_18_V.webp?v=1755007501"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Hyperice 18V Charger</p><p class="product-price-regular">通常価格 ¥3,800</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/hyperice-3-backpack" rel="noopener" style="display:block;" target="_blank"><img alt="Hyperice 3 Backpack" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Normatec_Backpack_1.webp?v=1755007467"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Hyperice 3 Backpack</p><p class="product-price-regular">通常価格 ¥32,450</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/normatec-carry-case" rel="noopener" style="display:block;" target="_blank"><img alt="Hyperice 3 Carry Case" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Normatec_Carry_Case_1.jpg?v=1755007452"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Hyperice 3 Carry Case</p><p class="product-price-regular">通常価格 ¥32,450</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/hyperice-contrast-2-knee" rel="noopener" style="display:block;" target="_blank"><img alt="Hyperice Contrast 2 Knee" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Hyperice_X_2_Knee_1_2.webp?v=1758820741"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Hyperice Contrast 2 Knee</p><p class="product-price-regular">通常価格 ¥94,600</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/hyperice-contrast-2-shoulder" rel="noopener" style="display:block;" target="_blank"><img alt="Hyperice Contrast 2 Shoulder" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Hyperice_X_2_Shoulder_1_2.webp?v=1758821499"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Hyperice Contrast 2 Shoulder</p><p class="product-price-regular">通常価格 ¥94,600</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/hyperice-mat" rel="noopener" style="display:block;" target="_blank"><img alt="Hyperice Mat" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/item_hypericemat_1024x1024_8a24c95e-0b5c-4b5f-b748-c55224e2a166.png?v=1758805532"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Hyperice Mat</p><p class="product-price-regular">通常価格 ¥4,290</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/hypersphere-go" rel="noopener" style="display:block;" target="_blank"><img alt="Hypersphere Go" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Hypersphere_Go_1.webp?v=1755007387"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Hypersphere Go</p><p class="product-price-regular">通常価格 ¥19,800</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/hypervolt-2-black" rel="noopener" style="display:block;" target="_blank"><img alt="Hypervolt 2 - Black" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Hypervolt_2_Black_1.webp?v=1755007229"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Hypervolt 2 - Black</p><p class="product-price-regular">通常価格 ¥44,000</p><p class="product-price-member">会員優待価格 ¥36,520</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/hypervolt-2-charging-base" rel="noopener" style="display:block;" target="_blank"><img alt="Hypervolt 2 Charging Base" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Hypervolt_2_Charging_Base.webp?v=1755007496"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Hypervolt 2 Charging Base</p><p class="product-price-regular">通常価格 ¥13,200</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/hypervolt-2-pro" rel="noopener" style="display:block;" target="_blank"><img alt="Hypervolt 2 Pro - Black" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Hypervolt_2_Pro_1.webp?v=1761054886"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Hypervolt 2 Pro - Black</p><p class="product-price-regular">通常価格 ¥66,000</p><p class="product-price-member">会員優待価格 ¥56,100</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/hypervolt-2-pro-battery" rel="noopener" style="display:block;" target="_blank"><img alt="Hypervolt 2 Pro Battery" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/hypervolt-2-pro-battery.webp?v=1755007487"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Hypervolt 2 Pro Battery</p><p class="product-price-regular">通常価格 ¥19,250</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/hypervolt-2-pro-charging-base" rel="noopener" style="display:block;" target="_blank"><img alt="Hypervolt 2 Pro Charging Base" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Hypervolt_2_Pro_Charging_Base.webp?v=1755007506"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Hypervolt 2 Pro Charging Base</p><p class="product-price-regular">通常価格 ¥13,200</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/hypervolt-go-2" rel="noopener" style="display:block;" target="_blank"><img alt="Hypervolt Go 2 - Arctic Gray" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Hypervolt_Go_2_White_1.webp?v=1755007221"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Hypervolt Go 2 - Arctic Gray</p><p class="product-price-regular">通常価格 ¥26,400</p><p class="product-price-member">会員優待価格 ¥21,450</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/hypervolt-go-2-black" rel="noopener" style="display:block;" target="_blank"><img alt="Hypervolt Go 2 - Black" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Hypervolt_Go_2_Black_1.webp?v=1755007429"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Hypervolt Go 2 - Black</p><p class="product-price-regular">通常価格 ¥26,400</p><p class="product-price-member">会員優待価格 ¥21,450</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/hypervolt-go-2-charging-base" rel="noopener" style="display:block;" target="_blank"><img alt="Hypervolt Go 2 Charging Base" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Hypervolt_GO_2_Dock_v0003_1024x1024_97218481-db4f-48a0-b4d5-b51b2eb4d244.png?v=1758805706"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Hypervolt Go 2 Charging Base</p><p class="product-price-regular">通常価格 ¥13,200</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/hypervolt-head-attachments" rel="noopener" style="display:block;" target="_blank"><img alt="Hypervolt Head Attachments" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Hypervolt_Attachment_Set.webp?v=1755007492"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Hypervolt Head Attachments</p><p class="product-price-regular">通常価格 ¥6,050</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/normatec-arm-attachments" rel="noopener" style="display:block;" target="_blank"><img alt="Normatec Arm Attachments" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Normatec_Arm_Attachments.webp?v=1755007235"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Normatec Arm Attachments</p><p class="product-price-regular">通常価格 ¥75,900</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/normatec-charger" rel="noopener" style="display:block;" target="_blank"><img alt="Normatec Charger" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Normatec_Charger_15V.webp?v=1755007440"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Normatec Charger</p><p class="product-price-regular">通常価格 ¥5,720</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/normatec-full-body" rel="noopener" style="display:block;" target="_blank"><img alt="Normatec Full Body" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Normatec_3_Full_Body_1.webp?v=1755007307"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Normatec Full Body</p><p class="product-price-regular">通常価格 ¥312,400</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/normatec-hip-attachment" rel="noopener" style="display:block;" target="_blank"><img alt="Normatec Hip Attachment" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Normatec_Hip_Attachment.webp?v=1755007240"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Normatec Hip Attachment</p><p class="product-price-regular">通常価格 ¥53,900</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/normatec-hose" rel="noopener" style="display:block;" target="_blank"><img alt="Normatec Hose" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Normatec_Hose.webp?v=1755007475"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Normatec Hose</p><p class="product-price-regular">通常価格 ¥11,000</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/normatec-legs" rel="noopener" style="display:block;" target="_blank"><img alt="Normatec Legs" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Normatec_3_Legs_1.webp?v=1755009744"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Normatec Legs</p><p class="product-price-regular">通常価格 ¥182,600</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/normatec-lower-body" rel="noopener" style="display:block;" target="_blank"><img alt="Normatec Lower Body" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Normatec_3_Lower_Body_1.webp?v=1755007420"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Normatec Lower Body</p><p class="product-price-regular">通常価格 ¥236,500</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/normatec-lower-legs" rel="noopener" style="display:block;" target="_blank"><img alt="Normatec Lower Legs" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Normatec_Lower_Legs_1_1.webp?v=1758806081"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Normatec Lower Legs</p><p class="product-price-regular">通常価格 ¥93,500</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/normatec-premier" rel="noopener" style="display:block;" target="_blank"><img alt="Normatec Premier" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Normatec_Elite_1.webp?v=1755006741"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Normatec Premier</p><p class="product-price-regular">通常価格 ¥222,200</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/normatec-premier-hips" rel="noopener" style="display:block;" target="_blank"><img alt="Normatec Premier Hips" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/NormatecEliteHips1.webp?v=1761122075"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Normatec Premier Hips</p><p class="product-price-regular">通常価格 ¥128,700</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/venom-2-back" rel="noopener" style="display:block;" target="_blank"><img alt="Venom 2 Back" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Venom_2_Back_1.jpg?v=1755007290"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Venom 2 Back</p><p class="product-price-regular">通常価格 ¥53,900</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/venom-2-leg" rel="noopener" style="display:block;" target="_blank"><img alt="Venom 2 Leg" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Venom_2_Leg_1.webp?v=1755007316"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Venom 2 Leg</p><p class="product-price-regular">通常価格 ¥53,900</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/venom-2-shoulder" rel="noopener" style="display:block;" target="_blank"><img alt="Venom 2 Shoulder" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Venom_2_Shoulder_1.jpg?v=1755007325"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Venom 2 Shoulder</p><p class="product-price-regular">通常価格 ¥53,900</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/venom-go" rel="noopener" style="display:block;" target="_blank"><img alt="Venom Go" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Venom_Go_1.webp?v=1755007277"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Venom Go</p><p class="product-price-regular">通常価格 ¥28,600</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/venom-go-case" rel="noopener" style="display:block;" target="_blank"><img alt="Venom Go Case" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Venom_Go_Case_1.webp?v=1755010047"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Venom Go Case</p><p class="product-price-regular">通常価格 ¥5,720</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/venom-go-refill-pack" rel="noopener" style="display:block;" target="_blank"><img alt="Venom Go Refill Pack" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Venom_Go_Refill_Pack_1.webp?v=1755007348"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Venom Go Refill Pack</p><p class="product-price-regular">通常価格 ¥7,700</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/vyper-3" rel="noopener" style="display:block;" target="_blank"><img alt="Vyper 3" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Vyper_3_1.webp?v=1755007372"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Vyper 3</p><p class="product-price-regular">通常価格 ¥45,100</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/vyper-go" rel="noopener" style="display:block;" target="_blank"><img alt="Vyper Go" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Vyper_GO_Stills_SideLayDown_01_1024x1024_62871481-fdcf-466e-ba73-23ed18e88951.png?v=1758806531"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Vyper Go</p><p class="product-price-regular">通常価格 ¥25,800</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div></div>
+</div>
+</section>
+<!-- =====================================================
+       ④ 健康・ヘルスケア・サプリ
+  ===================================================== -->
+<section class="product-section" id="cat-health">
+<div class="container">
+<div class="product-section-header">
+<h2>💊 健康・ヘルスケア・サプリ</h2>
+<span class="product-count">6件</span>
+</div>
+<div class="product-grid">
+<!-- 商品1: DENBA Health ハイグレード -->
+<div class="product-card">
+<img alt="DENBA Health ハイグレード" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=1V5U3kJ2PhFEiGyU20iMKIpVhCE28d8RRtAXMCIkzKjrqhYMTqMIC6GZOcE20efo9CZ%2F8UwCIuANE4ZRNewMsi4PMz79ZDShO8WZMSs0%2FtxJtAuS1Q%3D%3D&amp;u2=wcS%2BkESiuFyGoXD0&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">DENBA</p>
+<p class="product-name">DENBA Health ハイグレード</p>
+<p class="product-price-regular">通常価格 ¥900,000</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- 商品2: DENBA Health スタンダード -->
+<div class="product-card">
+<img alt="DENBA Health スタンダード" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=zNYBlzMjRJvMnGCRoMW5bvvOXPhX8LbRRp%2FZOcJJ2DHJcnGfo6f%2B%2Bip0aZV6l%2FrvBinyswKa6qEbleGU3mmwPKeK9xPRkPxImvzAE29lbAUrWg%3D%3D&amp;u2=eJtwp30xV576xQfr&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">DENBA</p>
+<p class="product-name">DENBA Health スタンダード</p>
+<p class="product-price-regular">通常価格 ¥550,000</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<!-- 商品3: DENBA Charge -->
+<div class="product-card">
+<img alt="DENBA Charge" class="product-img" src="https://sspark.genspark.ai/cfimages?u1=hATY35sBaW%2FOapUyEmTmU2acxg9hwbTRH3kmdvrUs%2FDVFoyRtBHM1Ovqh0cVEuROxbZLxbwk99sGIB%2FzTmZncdHXDQqTQR9IW648YrgmiuwL1%2F3cXRUOZ1Ezo1g2Ng%3D%3D&amp;u2=a%2BLFhIHSOMRsjzy8&amp;width=1024"/>
+<div class="product-body">
+<p class="product-brand">DENBA</p>
+<p class="product-name">DENBA Charge</p>
+<p class="product-price-regular">お問い合わせください</p>
+<p class="product-price-member">会員優待価格・詳細はお問い合わせ</p>
+<a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj">💬 LINEで問い合わせ▶</a>
+</div>
+</div>
+<div class="product-card"><a href="https://hyperice.jp/products/gift-wrapping" rel="noopener" style="display:block;" target="_blank"><img alt="Gift Wrapping" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/item_gift_wrapping_d33ae49d-7792-433c-ae95-89d05fa6c2f0.png?v=1758800344"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Gift Wrapping</p><p class="product-price-regular">通常価格 ¥330</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/golf-holster" rel="noopener" style="display:block;" target="_blank"><img alt="Golf Holster" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Golf_Holster.webp?v=1755007511"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Golf Holster</p><p class="product-price-regular">通常価格 ¥3,080</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/golf-pack-artic-gray" rel="noopener" style="display:block;" target="_blank"><img alt="Golf Pack - Artic Gray" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Golf_Pack.webp?v=1755007516"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Golf Pack - Artic Gray</p><p class="product-price-regular">通常価格 ¥26,400</p><p class="product-price-member">会員優待価格 ¥21,450</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/golf-pack-black" rel="noopener" style="display:block;" target="_blank"><img alt="Golf Pack - Black" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/item_golf_pack_black_647db3c3-9e89-417d-8eea-2031f8c44a55.png?v=1758800642"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Golf Pack - Black</p><p class="product-price-regular">通常価格 ¥26,400</p><p class="product-price-member">会員優待価格 ¥21,450</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/heated-head-attachment" rel="noopener" style="display:block;" target="_blank"><img alt="Heated Head Attachment" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/heated-head-thumb-kXvfNhmk.jpg?v=1755007245"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Heated Head Attachment</p><p class="product-price-regular">通常価格 ¥12,100</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/hyperflux-arm-attachment" rel="noopener" style="display:block;" target="_blank"><img alt="Hyperflux Arm Attachment" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/main_1024x1024_2f392a06-165c-4b28-9519-7fb411e05101.png?v=1758804865"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Hyperflux Arm Attachment</p><p class="product-price-regular">通常価格 ¥54,000</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/hyperice-18v-charger" rel="noopener" style="display:block;" target="_blank"><img alt="Hyperice 18V Charger" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Wall_Charger_18_V.webp?v=1755007501"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Hyperice 18V Charger</p><p class="product-price-regular">通常価格 ¥3,800</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/hyperice-3-backpack" rel="noopener" style="display:block;" target="_blank"><img alt="Hyperice 3 Backpack" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Normatec_Backpack_1.webp?v=1755007467"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Hyperice 3 Backpack</p><p class="product-price-regular">通常価格 ¥32,450</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/normatec-carry-case" rel="noopener" style="display:block;" target="_blank"><img alt="Hyperice 3 Carry Case" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Normatec_Carry_Case_1.jpg?v=1755007452"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Hyperice 3 Carry Case</p><p class="product-price-regular">通常価格 ¥32,450</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/hyperice-contrast-2-knee" rel="noopener" style="display:block;" target="_blank"><img alt="Hyperice Contrast 2 Knee" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Hyperice_X_2_Knee_1_2.webp?v=1758820741"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Hyperice Contrast 2 Knee</p><p class="product-price-regular">通常価格 ¥94,600</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/hyperice-contrast-2-shoulder" rel="noopener" style="display:block;" target="_blank"><img alt="Hyperice Contrast 2 Shoulder" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Hyperice_X_2_Shoulder_1_2.webp?v=1758821499"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Hyperice Contrast 2 Shoulder</p><p class="product-price-regular">通常価格 ¥94,600</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/hyperice-mat" rel="noopener" style="display:block;" target="_blank"><img alt="Hyperice Mat" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/item_hypericemat_1024x1024_8a24c95e-0b5c-4b5f-b748-c55224e2a166.png?v=1758805532"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Hyperice Mat</p><p class="product-price-regular">通常価格 ¥4,290</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/hypersphere-go" rel="noopener" style="display:block;" target="_blank"><img alt="Hypersphere Go" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Hypersphere_Go_1.webp?v=1755007387"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Hypersphere Go</p><p class="product-price-regular">通常価格 ¥19,800</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/hypervolt-2-black" rel="noopener" style="display:block;" target="_blank"><img alt="Hypervolt 2 - Black" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Hypervolt_2_Black_1.webp?v=1755007229"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Hypervolt 2 - Black</p><p class="product-price-regular">通常価格 ¥44,000</p><p class="product-price-member">会員優待価格 ¥36,520</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/hypervolt-2-charging-base" rel="noopener" style="display:block;" target="_blank"><img alt="Hypervolt 2 Charging Base" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Hypervolt_2_Charging_Base.webp?v=1755007496"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Hypervolt 2 Charging Base</p><p class="product-price-regular">通常価格 ¥13,200</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/hypervolt-2-pro" rel="noopener" style="display:block;" target="_blank"><img alt="Hypervolt 2 Pro - Black" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Hypervolt_2_Pro_1.webp?v=1761054886"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Hypervolt 2 Pro - Black</p><p class="product-price-regular">通常価格 ¥66,000</p><p class="product-price-member">会員優待価格 ¥56,100</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/hypervolt-2-pro-battery" rel="noopener" style="display:block;" target="_blank"><img alt="Hypervolt 2 Pro Battery" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/hypervolt-2-pro-battery.webp?v=1755007487"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Hypervolt 2 Pro Battery</p><p class="product-price-regular">通常価格 ¥19,250</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/hypervolt-2-pro-charging-base" rel="noopener" style="display:block;" target="_blank"><img alt="Hypervolt 2 Pro Charging Base" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Hypervolt_2_Pro_Charging_Base.webp?v=1755007506"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Hypervolt 2 Pro Charging Base</p><p class="product-price-regular">通常価格 ¥13,200</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/hypervolt-go-2" rel="noopener" style="display:block;" target="_blank"><img alt="Hypervolt Go 2 - Arctic Gray" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Hypervolt_Go_2_White_1.webp?v=1755007221"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Hypervolt Go 2 - Arctic Gray</p><p class="product-price-regular">通常価格 ¥26,400</p><p class="product-price-member">会員優待価格 ¥21,450</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/hypervolt-go-2-black" rel="noopener" style="display:block;" target="_blank"><img alt="Hypervolt Go 2 - Black" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Hypervolt_Go_2_Black_1.webp?v=1755007429"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Hypervolt Go 2 - Black</p><p class="product-price-regular">通常価格 ¥26,400</p><p class="product-price-member">会員優待価格 ¥21,450</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/hypervolt-go-2-charging-base" rel="noopener" style="display:block;" target="_blank"><img alt="Hypervolt Go 2 Charging Base" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Hypervolt_GO_2_Dock_v0003_1024x1024_97218481-db4f-48a0-b4d5-b51b2eb4d244.png?v=1758805706"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Hypervolt Go 2 Charging Base</p><p class="product-price-regular">通常価格 ¥13,200</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/hypervolt-head-attachments" rel="noopener" style="display:block;" target="_blank"><img alt="Hypervolt Head Attachments" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Hypervolt_Attachment_Set.webp?v=1755007492"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Hypervolt Head Attachments</p><p class="product-price-regular">通常価格 ¥6,050</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/normatec-arm-attachments" rel="noopener" style="display:block;" target="_blank"><img alt="Normatec Arm Attachments" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Normatec_Arm_Attachments.webp?v=1755007235"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Normatec Arm Attachments</p><p class="product-price-regular">通常価格 ¥75,900</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/normatec-charger" rel="noopener" style="display:block;" target="_blank"><img alt="Normatec Charger" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Normatec_Charger_15V.webp?v=1755007440"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Normatec Charger</p><p class="product-price-regular">通常価格 ¥5,720</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/normatec-full-body" rel="noopener" style="display:block;" target="_blank"><img alt="Normatec Full Body" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Normatec_3_Full_Body_1.webp?v=1755007307"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Normatec Full Body</p><p class="product-price-regular">通常価格 ¥312,400</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/normatec-hip-attachment" rel="noopener" style="display:block;" target="_blank"><img alt="Normatec Hip Attachment" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Normatec_Hip_Attachment.webp?v=1755007240"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Normatec Hip Attachment</p><p class="product-price-regular">通常価格 ¥53,900</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/normatec-hose" rel="noopener" style="display:block;" target="_blank"><img alt="Normatec Hose" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Normatec_Hose.webp?v=1755007475"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Normatec Hose</p><p class="product-price-regular">通常価格 ¥11,000</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/normatec-legs" rel="noopener" style="display:block;" target="_blank"><img alt="Normatec Legs" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Normatec_3_Legs_1.webp?v=1755009744"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Normatec Legs</p><p class="product-price-regular">通常価格 ¥182,600</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/normatec-lower-body" rel="noopener" style="display:block;" target="_blank"><img alt="Normatec Lower Body" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Normatec_3_Lower_Body_1.webp?v=1755007420"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Normatec Lower Body</p><p class="product-price-regular">通常価格 ¥236,500</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/normatec-lower-legs" rel="noopener" style="display:block;" target="_blank"><img alt="Normatec Lower Legs" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Normatec_Lower_Legs_1_1.webp?v=1758806081"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Normatec Lower Legs</p><p class="product-price-regular">通常価格 ¥93,500</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/normatec-premier" rel="noopener" style="display:block;" target="_blank"><img alt="Normatec Premier" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Normatec_Elite_1.webp?v=1755006741"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Normatec Premier</p><p class="product-price-regular">通常価格 ¥222,200</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/normatec-premier-hips" rel="noopener" style="display:block;" target="_blank"><img alt="Normatec Premier Hips" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/NormatecEliteHips1.webp?v=1761122075"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Normatec Premier Hips</p><p class="product-price-regular">通常価格 ¥128,700</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/venom-2-back" rel="noopener" style="display:block;" target="_blank"><img alt="Venom 2 Back" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Venom_2_Back_1.jpg?v=1755007290"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Venom 2 Back</p><p class="product-price-regular">通常価格 ¥53,900</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/venom-2-leg" rel="noopener" style="display:block;" target="_blank"><img alt="Venom 2 Leg" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Venom_2_Leg_1.webp?v=1755007316"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Venom 2 Leg</p><p class="product-price-regular">通常価格 ¥53,900</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/venom-2-shoulder" rel="noopener" style="display:block;" target="_blank"><img alt="Venom 2 Shoulder" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Venom_2_Shoulder_1.jpg?v=1755007325"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Venom 2 Shoulder</p><p class="product-price-regular">通常価格 ¥53,900</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/venom-go" rel="noopener" style="display:block;" target="_blank"><img alt="Venom Go" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Venom_Go_1.webp?v=1755007277"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Venom Go</p><p class="product-price-regular">通常価格 ¥28,600</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/venom-go-case" rel="noopener" style="display:block;" target="_blank"><img alt="Venom Go Case" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Venom_Go_Case_1.webp?v=1755010047"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Venom Go Case</p><p class="product-price-regular">通常価格 ¥5,720</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/venom-go-refill-pack" rel="noopener" style="display:block;" target="_blank"><img alt="Venom Go Refill Pack" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Venom_Go_Refill_Pack_1.webp?v=1755007348"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Venom Go Refill Pack</p><p class="product-price-regular">通常価格 ¥7,700</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/vyper-3" rel="noopener" style="display:block;" target="_blank"><img alt="Vyper 3" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Vyper_3_1.webp?v=1755007372"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Vyper 3</p><p class="product-price-regular">通常価格 ¥45,100</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div><div class="product-card"><a href="https://hyperice.jp/products/vyper-go" rel="noopener" style="display:block;" target="_blank"><img alt="Vyper Go" class="product-img" loading="lazy" src="https://cdn.shopify.com/s/files/1/0873/1777/4632/files/Vyper_GO_Stills_SideLayDown_01_1024x1024_62871481-fdcf-466e-ba73-23ed18e88951.png?v=1758806531"/></a><div class="product-body"><p class="product-brand">Hyperice</p><p class="product-name">Vyper Go</p><p class="product-price-regular">通常価格 ¥25,800</p><p class="product-price-member">会員優待価格・詳細はお問い合わせ</p><a class="product-btn" href="https://line.me/R/ti/p/@110gnfzj" target="_blank">💬 LINEで問い合わせ▶</a></div></div></div>
+</div>
+</section>
+<!-- =====================================================
+       ⑤ ファッション
+  ===================================================== -->
+<section class="product-section" id="cat-fashion">
+<div class="container">
+<div class="product-section-header">
+<h2>👗 ファッション</h2>
+<span class="product-count">商品準備中</span>
+</div>
+<div class="product-grid">
+</div>
+</div>
+</section>
+<!-- =====================================================
+       ⑥ ジュエリー・アクセサリー
+  ===================================================== -->
+<section class="product-section" id="cat-jewelry">
+<div class="container">
+<div class="product-section-header">
+<h2>💎 ジュエリー・アクセサリー</h2>
+<span class="product-count">商品準備中</span>
+</div>
+<div class="product-grid">
+</div>
+</div>
+</section>
+<!-- =====================================================
+       ⑦ スマホ・タブレット・オーディオ
+  ===================================================== -->
+<section class="product-section" id="cat-tech">
+<div class="container">
+<div class="product-section-header">
+<h2>📱 スマホ・タブレット・オーディオ</h2>
+<span class="product-count">商品準備中</span>
+</div>
+<div class="product-grid">
+</div>
+</div>
+</section>
+<!-- =====================================================
+       ⑧ インテリア・家具・家電
+  ===================================================== -->
+<section class="product-section" id="cat-interior">
+<div class="container">
+<div class="product-section-header">
+<h2>🛋️ インテリア・家具・家電</h2>
+<span class="product-count">商品準備中</span>
+</div>
+<div class="product-grid">
+</div>
+</div>
+</section>
+<!-- =====================================================
+       ⑨ 美容施設優待
+  ===================================================== -->
+<section class="product-section" id="cat-beautysalon">
+<div class="container">
+<div class="product-section-header">
+<h2>💆 美容施設優待</h2>
+<span class="product-count">準備中</span>
+</div>
+<div class="product-grid">
+</div>
+</div>
+</section>
+<!-- =====================================================
+       ⑩ 飲食優待
+  ===================================================== -->
+<section class="product-section" id="cat-dining">
+<div class="container">
+<div class="product-section-header">
+<h2>🍴 飲食優待</h2>
+<span class="product-count">準備中</span>
+</div>
+<div class="product-grid">
+</div>
+</div>
+</section>
+<!-- =====================================================
+       ⑪ 体験・レジャー優待
+  ===================================================== -->
+<section class="product-section" id="cat-leisure">
+<div class="container">
+<div class="product-section-header">
+<h2>🎫 体験・レジャー優待</h2>
+<span class="product-count">準備中</span>
+</div>
+<div class="product-grid">
+</div>
+</div>
+</section>
+<!-- =====================================================
+       ⑫ 特別オファー
+  ===================================================== -->
+<section class="product-section" id="cat-special">
+<div class="container">
+<div class="product-section-header">
+<h2>⭐️ 特別オファー</h2>
+<span class="product-count">準備中</span>
+</div>
+<div class="product-grid">
+</div>
+</div>
+</section>
+</div><!-- /products -->
+<!-- =======================================================
+     【LINEバナー】
+     ページ下部の黒い横断幕
+     ★ @110gnfzj を自分のLINE IDに変更してください ★
+     ★ テキストを変えたい場合は <p> タグ内を編集 ★
+======================================================= -->
+<div class="line-banner">
+<p>🔔 気になる商品・優待はLINEからお気軽にお問い合わせください</p>
+<a class="line-banner-btn" href="https://line.me/R/ti/p/@110gnfzj">
+    💬 LINEで問い合わせる▶
+  </a>
+</div>
+<!-- =======================================================
+     【フッター】
+     ページ最下部
+     ★ サイト名・クレジットを変えたい場合はここを編集 ★
+======================================================= -->
+<footer>
+<!-- ★ フッターのサイト名 ★ -->
+<div class="footer-logo">Member's Offer Market</div>
+<!-- ★ クレジット表記（薄いグレーで表示） ★ -->
+<p>Supported by PHOEBUS（フォーブス）</p>
+</footer>
+<!-- =======================================================
+     【JavaScript：カテゴリー切り替え機能】
+     カテゴリーボタンをクリックすると動く仕組み
+     ここは基本的に触らなくてOK
+
+     動作の流れ：
+     1. 全ての商品セクションを非表示にする
+     2. 全てのボタンのゴールド枠を外す
+     3. クリックされたカテゴリーの商品セクションだけ表示する
+     4. クリックされたボタンだけゴールド枠にする
+======================================================= -->
+<script>
+  function showCategory(cat, btnEl) {
+    document.querySelectorAll('.product-section').forEach(function(s) {
+        s.classList.remove('active');
+    });
+    document.querySelectorAll('.category-card').forEach(function(b) {
+        b.classList.remove('active');
+    });
+    var section = document.getElementById('cat-' + cat);
+    if (section) {
+        section.classList.add('active');
+        // スムーズスクロール: ヘッダー分のオフセットを考慮
+        var headerHeight = document.querySelector('header') ? document.querySelector('header').offsetHeight : 0;
+        var top = section.getBoundingClientRect().top + window.pageYOffset - headerHeight - 16;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+    }
+    if (btnEl) btnEl.classList.add('active');
+    return false;
+}
+</script>
+</body>
+</html>
